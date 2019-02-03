@@ -1,0 +1,44 @@
+html {
+  font-family: 'Rubik', sans-serif;
+  font-size: 14px;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+
+  @include tablet {
+    font-size: 16px;
+  }
+
+  @include fullhd {
+    font-size: 18px;
+  }
+}
+
+body {
+  @extend %font-size;
+  color: $black;
+  font-feature-settings: "liga" 1;
+}
+
+p,
+ul,
+ol,
+h3 {
+  margin-bottom: 1.6em;
+  @extend %font-size;
+}
+
+h1 {
+  font-family: 'PT Serif', serif;
+  font-size: 3.2 * $font-size;
+  line-height: 1.25;
+  margin-bottom: 1em;
+}
+
+h2 {
+  font-family: 'PT Serif', serif;
+  font-size: 1.6 * $font-size;
+  line-height: 1.5;
+  margin-bottom: 1em;
+}

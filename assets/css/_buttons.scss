@@ -1,0 +1,42 @@
+a.button,
+.button {
+  @extend %button;
+}
+
+
+ul.button-group {
+  display: flex;
+  // background: #fff;
+  border: 2px solid $gray;
+  border-radius: 8px;
+  overflow: hidden;
+
+  @extend .nav;
+  @extend %box-shadow;
+
+  > li {
+    padding: 0;
+    @extend %button;
+
+    > a {
+      display: block;
+      padding: $button-padding;
+      text-decoration: none;
+    }
+  }
+
+  > li:not(:first-child) {
+    > a {
+      position: relative;
+
+      &::before {
+        content: '';
+        border-left: 2px solid $gray;
+        height: 1.4em;
+        position: absolute;
+        left: -0.1em;
+        margin-top: -0.2em
+      }
+    }
+  }
+}

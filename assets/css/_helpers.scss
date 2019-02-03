@@ -1,0 +1,28 @@
+%font-size {
+  font-size: $font-size;
+  line-height: 1.6;
+}
+
+%is-uppercased {
+  text-transform: uppercase;
+  letter-spacing: .075em;
+}
+
+%box-shadow {
+  box-shadow: 0px 4px 10px 0px rgba(0,0,0,0.1);
+}
+
+%button {
+  font-size: 0.6em;
+  padding: $button-padding;
+  background: #fff;
+  line-height: 1;
+  text-decoration: none;
+
+  @extend %is-uppercased;
+
+  &:focus,
+  &:hover {
+    background: darken(#fff, 5%);
+  }
+}

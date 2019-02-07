@@ -15,12 +15,14 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.3.6",
+    "@nuxtjs/markdownit": "^1.2.3",
     "cross-env": "^5.2.0",
     "intersection-observer": "^0.5.1",
     "mapbox-gl": "^0.52.0",
     "mapbox-gl-vue": "^1.9.0",
     "nuxt": "^2.3.4",
     "nuxt-sass-resources-loader": "^2.0.5",
+    "v-tooltip": "^2.0.0-rc.33",
     "vue-scrollama": "^1.1.0"
   },
   "devDependencies": {

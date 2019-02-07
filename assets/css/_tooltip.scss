@@ -1,0 +1,117 @@
+.tooltip {
+  $size: 10px;
+  display: block !important;
+  z-index: 10000;
+
+  .tooltip-arrow {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    position: absolute;
+    margin: $size;
+    border-color: #fff;
+    z-index: 1;
+  }
+  
+  &[x-placement^="top"] {
+    margin-bottom: $size;
+
+    .tooltip-arrow {
+      border-width: $size $size 0 $size;
+      border-left-color: transparent !important;
+      border-right-color: transparent !important;
+      border-bottom-color: transparent !important;
+      bottom: -$size;
+      left: calc(50% - $size);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  &[x-placement^="bottom"] {
+    margin-top: $size;
+
+    .tooltip-arrow {
+      border-width: 0 $size $size $size;
+      border-left-color: transparent !important;
+      border-right-color: transparent !important;
+      border-top-color: transparent !important;
+      top: -$size;
+      left: calc(50% - $size);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  &[x-placement^="right"] {
+    margin-left: $size;
+
+    .tooltip-arrow {
+      border-width: $size $size $size 0;
+      border-left-color: transparent !important;
+      border-top-color: transparent !important;
+      border-bottom-color: transparent !important;
+      left: -$size;
+      top: calc(50% - $size);
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  &[x-placement^="left"] {
+    margin-right: $size;
+
+    .tooltip-arrow {
+      border-width: $size 0 $size $size;
+      border-top-color: transparent !important;
+      border-right-color: transparent !important;
+      border-bottom-color: transparent !important;
+      right: -$size;
+      top: calc(50% - $size);
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  &.popover {
+    font-size: .8em;
+    
+    .popover-inner {
+      background: #fff;
+      padding: ($margin / 3) ($margin / 2);
+      // box-shadow: 0 $size 30px rgba(black, .1);
+      max-width: 500px;
+      @extend %border-radius;
+      @extend %box-shadow;
+    }
+
+    .popover-arrow {
+      border-color: #fff;
+    }
+  }
+
+
+  &[aria-hidden='true'] {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .15s, visibility .15s;
+  }
+
+  &[aria-hidden='false'] {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity .15s;
+  }
+}
+
+em.info {
+  background: rgba(green, .1);
+  font-style: normal;
+  border-bottom: 1px solid green;
+  padding: 0 2px;
+  cursor: pointer;
+}
+
+article .v-popover {
+  display: inline-block;
+}

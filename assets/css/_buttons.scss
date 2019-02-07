@@ -8,10 +8,10 @@ ul.button-group {
   display: flex;
   // background: #fff;
   border: 2px solid $gray;
-  border-radius: 8px;
   overflow: hidden;
-
+  
   @extend .nav;
+  @extend %border-radius;
   @extend %box-shadow;
 
   > li {

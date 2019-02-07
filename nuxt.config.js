@@ -45,6 +45,7 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    { src: '~/plugins/vue-tooltip', ssr: false },
     { src: '~/plugins/vue-mapbox', ssr: false },
     { src: '~/plugins/vue-scrollama', ssr: false }
   ],
@@ -55,8 +56,16 @@ module.exports = {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    '@nuxtjs/markdownit',
     ['nuxt-sass-resources-loader', '~/assets/css/index.scss']
   ],
+  // https://github.com/nuxt-community/modules/tree/master/packages/markdownit
+  markdownit: {
+    preset: 'default',
+    html: true,
+    linkify: true,
+    breaks: true
+  },
   /*
   ** Axios module configuration
   */

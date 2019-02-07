@@ -15,6 +15,7 @@
             show: false,
             position: 'top-right'
           }"
+          @map-init="mapInitialized"
           @map-load="mapLoaded"
           @map-click="mapClicked"
         />
@@ -27,47 +28,11 @@
           @step-enter="scrollamaStepEnterHandler"
         >
           <div class="step">
-            <h1>
-              Wie ist die Verteilung der Gesundheitseinrichtungen in Deutschland geregelt?
-            </h1>
-
-            <h2>
-              Project about income and health infrastructure in Hamburg, Germany. Wie ist die Verteilung der Gesundheitseinrichtungen in Deutschland geregelt?
-            </h2>
-
-            <p>{{ mapboxAccessToken }}. Aliqua culpa ea dolor nisi id esse. Officia fugiat voluptate ullamco fugiat irure aliquip officia commodo nulla. Culpa sunt esse consectetur nostrud veniam ut mollit dolor sunt enim minim veniam sit. Proident dolore labore do incididunt reprehenderit ipsum quis irure do. Non aliquip cillum ipsum deserunt mollit aliqua enim ipsum culpa Lorem ut.</p>
-
-            <p>{{ mapboxAccessToken }}. Aliqua culpa ea dolor nisi id esse. Officia fugiat voluptate ullamco fugiat irure aliquip officia commodo nulla. Culpa sunt esse consectetur nostrud veniam ut mollit dolor sunt enim minim veniam sit. Proident dolore labore do incididunt reprehenderit ipsum quis irure do. Non aliquip cillum ipsum deserunt mollit aliqua enim ipsum culpa Lorem ut.</p>
-
-            <ul>
-              <li>Nisi ullamco velit ex cupidatat ut aute tempor anim.</li>
-              <li>Sunt magna esse nulla sint cillum qui qui.</li>
-              <li>Id culpa veniam do cillum.</li>
-              <li>Anim cupidatat dolor do proident ullamco aute do fugiat exercitation excepteur.</li>
-              <li>Lorem labore eiusmod proident ea eiusmod in irure eiusmod.</li>
-            </ul>
+            <cGesundheitsversorgungDeutschland />
           </div>
 
           <div class="step">
-            <h1>
-              Wie ist die Verteilung der Gesundheitseinrichtungen in Deutschland geregelt?
-            </h1>
-
-            <h2>
-              Project about income and health infrastructure in Hamburg, Germany. Wie ist die Verteilung der Gesundheitseinrichtungen in Deutschland geregelt?
-            </h2>
-
-            <p>{{ mapboxAccessToken }}. Aliqua culpa ea dolor nisi id esse. Officia fugiat voluptate ullamco fugiat irure aliquip officia commodo nulla. Culpa sunt esse consectetur nostrud veniam ut mollit dolor sunt enim minim veniam sit. Proident dolore labore do incididunt reprehenderit ipsum quis irure do. Non aliquip cillum ipsum deserunt mollit aliqua enim ipsum culpa Lorem ut.</p>
-
-            <p>{{ mapboxAccessToken }}. Aliqua culpa ea dolor nisi id esse. Officia fugiat voluptate ullamco fugiat irure aliquip officia commodo nulla. Culpa sunt esse consectetur nostrud veniam ut mollit dolor sunt enim minim veniam sit. Proident dolore labore do incididunt reprehenderit ipsum quis irure do. Non aliquip cillum ipsum deserunt mollit aliqua enim ipsum culpa Lorem ut.</p>
-
-            <ul>
-              <li>Nisi ullamco velit ex cupidatat ut aute tempor anim.</li>
-              <li>Sunt magna esse nulla sint cillum qui qui.</li>
-              <li>Id culpa veniam do cillum.</li>
-              <li>Anim cupidatat dolor do proident ullamco aute do fugiat exercitation excepteur.</li>
-              <li>Lorem labore eiusmod proident ea eiusmod in irure eiusmod.</li>
-            </ul>
+            <cUeberversorgtOderNicht />
           </div>
         </Scrollama>
       </article>
@@ -81,14 +46,23 @@ import TheNavMain from '~/components/TheNavMain.vue'
 import TheNavMeta from '~/components/TheNavMeta.vue'
 import BarTop from '~/components/BaseBarTop.vue'
 
+import cGesundheitsversorgungDeutschland from '~/components/content/cGesundheitsversorgungDeutschland.vue'
+import cUeberversorgtOderNicht from '~/components/content/cUeberversorgtOderNicht.vue'
+
 export default {
   components: {
     TheNavMain,
     TheNavMeta,
-    BarTop
+    BarTop,
+
+    // content
+    cGesundheitsversorgungDeutschland,
+    cUeberversorgtOderNicht
   },
+
   data() {
     return {
+      map: {},
       mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
       mapBoxOptions: {
         style: 'mapbox://styles/miduku/cjqbe0tc131jb2spn17qwvcsv',
@@ -107,7 +81,18 @@ export default {
 
   methods: {
     scrollamaStepEnterHandler({ element, index, direction }) {
-      console.log(element, index, direction)
+      // console.log(element, index, direction)
+
+      switch (index) {
+        default:
+        case 0:
+          this.map.flyTo({ zoom: 11 })
+          break
+
+        case 1:
+          this.map.flyTo({ zoom: 12.5 })
+          break
+      }
     },
 
     mapClicked(map, e) {
@@ -145,8 +130,14 @@ export default {
       new popupContent().$mount('#vue-popup-content')
     },
 
+    mapInitialized(map) {
+      console.log('map init')
+      this.map = map
+    },
+
     mapLoaded(map) {
       console.log('map loaded')
+
       map.addSource('bezirke_social-status-index-2016', {
         type: 'geojson',
         data:
@@ -189,6 +180,10 @@ export default {
       margin: ($margin * 2) 0;
       padding-left: $margin * 2;
       background: #fff;
+
+      .step {
+        margin-bottom: $margin * 10;
+      }
     }
 
     .map {

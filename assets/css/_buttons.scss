@@ -7,11 +7,11 @@ a.button,
 ul.button-group {
   display: flex;
   // background: #fff;
-  border: 2px solid $gray;
   overflow: hidden;
-  
+
   @extend .nav;
   @extend %border-radius;
+  @extend %border;
   @extend %box-shadow;
 
   > li {

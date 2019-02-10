@@ -7,7 +7,10 @@
 
 
     <div class="content">
-      <div class="map">
+      <div
+        :class="{ 'has-pointer-events': hasPointerEvents }"
+        class="map"
+      >
         <Mapbox
           :access-token="mapboxAccessToken"
           :map-options="mapBoxOptions"
@@ -23,15 +26,15 @@
 
       <article>
         <Scrollama
-          :offset="0.8"
+          :offset="0.2"
           :debug="true"
           @step-enter="scrollamaStepEnterHandler"
         >
-          <div class="step">
+          <div id="GesundheitsversorgungDeutschland" class="step anchor">
             <cGesundheitsversorgungDeutschland />
           </div>
 
-          <div class="step">
+          <div id="UeberversorgtOderNicht" class="step anchor">
             <cUeberversorgtOderNicht />
           </div>
         </Scrollama>
@@ -42,6 +45,8 @@
 
 
 <script>
+import anchorElements from '~/mixins/anchorElements'
+
 import TheNavMain from '~/components/TheNavMain.vue'
 import TheNavMeta from '~/components/TheNavMeta.vue'
 import BarTop from '~/components/BaseBarTop.vue'
@@ -60,8 +65,11 @@ export default {
     cUeberversorgtOderNicht
   },
 
+  mixins: [anchorElements],
+
   data() {
     return {
+      hasPointerEvents: false,
       map: {},
       mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
       mapBoxOptions: {
@@ -79,17 +87,24 @@ export default {
     }
   },
 
+  mounted() {
+    this.$nextTick(() => {
+      this.createAnchors()
+    })
+  },
+
   methods: {
     scrollamaStepEnterHandler({ element, index, direction }) {
       // console.log(element, index, direction)
+      // console.log(element)
 
-      switch (index) {
+      switch (element.id) {
         default:
-        case 0:
+        case 'GesundheitsversorgungDeutschland':
           this.map.flyTo({ zoom: 11 })
           break
 
-        case 1:
+        case 'UeberversorgtOderNicht':
           this.map.flyTo({ zoom: 12.5 })
           break
       }
@@ -167,7 +182,7 @@ export default {
 <style lang="scss" scoped>
 .container {
   /* margin: $margin * 2; */
-  padding-top: $margin * 6;
+  /* padding-top: 0; */
 
   .content {
     /* background: lightsalmon; */
@@ -177,12 +192,13 @@ export default {
       width: (100 / 3) * 1%;
       max-width: 30 * $size-20;
       background: #fff;
-      margin: ($margin * 2) 0;
+      margin: 0 0 ($margin * 2);
       padding-left: $margin * 2;
       background: #fff;
 
       .step {
-        margin-bottom: $margin * 10;
+        margin-bottom: $margin * 3;
+        padding-top: $margin * 7;
       }
     }
 
@@ -194,6 +210,11 @@ export default {
       width: (100 / 3) * 2 * 1%;
       margin-left: (100 / 3) * 1%;
       background: yellowgreen;
+      pointer-events: none;
+
+      &.has-pointer-events {
+        pointer-events: all;
+      }
 
       &::before {
         content: '';

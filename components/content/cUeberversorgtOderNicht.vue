@@ -1,9 +1,25 @@
 <template lang="md">
-  ## Hamburg — überversorgt oder nicht?
+  ## Hamburg — <br>überversorgt oder nicht?
 
   <!-- Visualisierung / Website: Karte auf ganz Hamburg, als ein Planungsgebiet dargestellt -->
 
   Bisher werden Großstädte wie Hamburg in der Bedarfsplanung als eine große Planungsregion betrachtet, die nicht weiter untergliedert ist. Obwohl Hamburg jedoch laut den offiziellen Zahlen als überversorgt gilt, hat sich in der Vergangenheit gezeigt, dass insbesondere Fachärzte vermehrt in Stadtteilen mit niedrigem Einkommen, z.B. in Wilhelmsburg oder Billstedt, fehlen ([MOPO](https://www.abendblatt.de/hamburg/kommunales/article215837423/Hamburger-Aerzte-laufen-Sturm-gegen-Senatorin-Pruefer-Storcks.html)). Dies schafft Probleme hinsichtlich der erwähnten „Sperrklausel“, da trotz bestehendem Mangel nur in Ausnahmefällen neue Arztniederlassungen genehmigt werden.
 
-  Um diesem Widerspruch nachzugehen, haben wir mithilfe öffentlich verfügbarer Daten (Link Stadtteilprofile) untersucht, nach welchen Kriterien sich die ärztliche Überversorgung im Stadtgebiet der Hansestadt verteilt und wie ausgeprägt diese ist. Den öffentlichen Diskurs aufgreifend, betrachten wir mithilfe der Daten den Zugang zu Gesundheitseinrichtungen und das durchschnittliche Einkommen der Stadtteile. Das bedeutet, dass wir eine Vereinfachung vorgenommen haben: natürlich ist kein/e Bürger*in der Stadt Hamburg dazu verpflichtet, einen Arzt innerhalb von administrativen Grenzen aufzusuchen, auf deren Grundlage wir arbeiten. Trotzdem lässt die Betrachtungsebene der Stadtteile Aussagen zur Verteilung der ärztlichen Versorgung zu, besonders, weil in Hamburg die Schere zwischen wohlhabenden und eher ärmeren Stadtteilen vergleichsweise hoch ist. So ist beispielsweise das Durchschnittseinkommen in Blankenese <v-popover><em class="info">mehr als sieben mal höher</em><template slot="popover">**Hamburg ist in Bezug auf die Einkommensverteilung das ungleichste Bundesland:** <br> Laut dem Gini-Koeffizient, einem statistischen Maß zur Berechnung von Einkommensungleichheit, welches jährlich für jedes Bundesland errechnet wird, ist Hamburg mit einem Wert von 0,32 -0,33 das Land mit der höchsten Einkommensungleichheit. Der Bundesdurchschnitt lag 2017 bei 0,29.</template></v-popover> als in Veddel.
+  Um diesem Widerspruch nachzugehen, haben wir mithilfe [öffentlich verfügbarer Daten](https://www.statistik-nord.de/fileadmin/Dokumente/Datenbanken_und_Karten/Stadtteilprofile/StadtteilprofileBerichtsjahr2017.xlsx) untersucht, nach welchen Kriterien sich die ärztliche Überversorgung im Stadtgebiet der Hansestadt verteilt und wie ausgeprägt diese ist. Den öffentlichen Diskurs aufgreifend, betrachten wir mithilfe der Daten den Zugang zu Gesundheitseinrichtungen und das durchschnittliche Einkommen der Stadtteile. Das bedeutet, dass wir eine Vereinfachung vorgenommen haben: natürlich ist kein/e Bürger*in der Stadt Hamburg dazu verpflichtet, einen Arzt innerhalb von administrativen Grenzen aufzusuchen, auf deren Grundlage wir arbeiten. Trotzdem lässt die Betrachtungsebene der Stadtteile Aussagen zur Verteilung der ärztlichen Versorgung zu, besonders, weil in Hamburg die Schere zwischen wohlhabenden und eher ärmeren Stadtteilen vergleichsweise hoch ist. So ist beispielsweise das Durchschnittseinkommen in Blankenese <v-popover><em class="info">mehr als sieben mal höher</em><template slot="popover">**{{ info.einkommensverteilung[0] }}** <br> {{ info.einkommensverteilung[1] }}</template></v-popover> als in Veddel.
 </template>
+
+
+<script>
+export default {
+  data() {
+    return {
+      info: {
+        einkommensverteilung: [
+          `Hamburg ist in Bezug auf die Einkommensverteilung das ungleichste Bundesland:`,
+          `Laut dem Gini-Koeffizient, einem statistischen Maß zur Berechnung von Einkommensungleichheit, welches jährlich für jedes Bundesland errechnet wird, ist Hamburg mit einem Wert von 0,32 -0,33 das Land mit der höchsten Einkommensungleichheit. Der Bundesdurchschnitt lag 2017 bei 0,29.`
+        ]
+      }
+    }
+  }
+}
+</script>

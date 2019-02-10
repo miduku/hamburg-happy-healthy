@@ -45,6 +45,7 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    '~/plugins/vue-scrollactive',
     { src: '~/plugins/vue-tooltip', ssr: false },
     { src: '~/plugins/vue-mapbox', ssr: false },
     { src: '~/plugins/vue-scrollama', ssr: false }

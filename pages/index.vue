@@ -11,6 +11,10 @@
         :class="{ 'has-pointer-events': hasPointerEvents }"
         class="map"
       >
+        <BarBottomMap>
+          <MapScale />
+        </BarBottomMap>
+
         <Mapbox
           :access-token="mapboxAccessToken"
           :map-options="mapBoxOptions"
@@ -26,7 +30,7 @@
 
       <article>
         <Scrollama
-          :offset="0.2"
+          :offset="0.025"
           :debug="true"
           @step-enter="scrollamaStepEnterHandler"
         >
@@ -36,6 +40,22 @@
 
           <div id="UeberversorgtOderNicht" class="step anchor">
             <cUeberversorgtOderNicht />
+          </div>
+
+          <div id="ZugangGesundheitseinrichtungen" class="step anchor">
+            <cZugangGesundheitseinrichtungen />
+          </div>
+
+          <div id="ZugangGesundheitseinrichtungenUndEinkommen" class="step anchor">
+            <cZugangGesundheitseinrichtungenUndEinkommen />
+          </div>
+
+          <div id="StadtteileEinkommensgruppe" class="step anchor">
+            <cStadtteileEinkommensgruppe />
+          </div>
+
+          <div id="CaseStudies" class="step anchor">
+            <cCaseStudies />
           </div>
         </Scrollama>
       </article>
@@ -50,19 +70,31 @@ import anchorElements from '~/mixins/anchorElements'
 import TheNavMain from '~/components/TheNavMain.vue'
 import TheNavMeta from '~/components/TheNavMeta.vue'
 import BarTop from '~/components/BaseBarTop.vue'
+import BarBottomMap from '~/components/BaseBarBottomMap.vue'
+import MapScale from '~/components/BaseMapScale.vue'
 
 import cGesundheitsversorgungDeutschland from '~/components/content/cGesundheitsversorgungDeutschland.vue'
 import cUeberversorgtOderNicht from '~/components/content/cUeberversorgtOderNicht.vue'
+import cZugangGesundheitseinrichtungen from '~/components/content/cZugangGesundheitseinrichtungen.vue'
+import cZugangGesundheitseinrichtungenUndEinkommen from '~/components/content/cZugangGesundheitseinrichtungenUndEinkommen.vue'
+import cStadtteileEinkommensgruppe from '~/components/content/cStadtteileEinkommensgruppe.vue'
+import cCaseStudies from '~/components/content/cCaseStudies.vue'
 
 export default {
   components: {
     TheNavMain,
     TheNavMeta,
     BarTop,
+    BarBottomMap,
+    MapScale,
 
     // content
     cGesundheitsversorgungDeutschland,
-    cUeberversorgtOderNicht
+    cUeberversorgtOderNicht,
+    cZugangGesundheitseinrichtungen,
+    cZugangGesundheitseinrichtungenUndEinkommen,
+    cStadtteileEinkommensgruppe,
+    cCaseStudies
   },
 
   mixins: [anchorElements],
@@ -181,24 +213,28 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-  /* margin: $margin * 2; */
-  /* padding-top: 0; */
+  @include until(1024px) {
+    display: none;
+  }
 
   .content {
-    /* background: lightsalmon; */
-
     article {
       position: relative;
       width: (100 / 3) * 1%;
-      max-width: 30 * $size-20;
-      background: #fff;
+      /* max-width: 30 * $size-20; */
       margin: 0 0 ($margin * 2);
       padding-left: $margin * 2;
       background: #fff;
 
+      @include from(2040px) {
+        width: 675px;
+      }
+
       .step {
-        margin-bottom: $margin * 3;
-        padding-top: $margin * 7;
+        display: block;
+        margin-bottom: $margin * 10;
+        padding-top: $margin * 8;
+        min-height: 100vh;
       }
     }
 
@@ -209,8 +245,13 @@ export default {
       height: 100vh;
       width: (100 / 3) * 2 * 1%;
       margin-left: (100 / 3) * 1%;
-      background: yellowgreen;
-      pointer-events: none;
+      background: $gray;
+      /* pointer-events: none; */
+
+      @include from(2040px) {
+        margin-left: 733px;
+        width: calc(100% - 733px);
+      }
 
       &.has-pointer-events {
         pointer-events: all;
@@ -226,26 +267,7 @@ export default {
         max-width: 200px;
         pointer-events: none;
         z-index: 1;
-        /* https://larsenwork.com/easing-gradients/ */
-        background: linear-gradient(
-          to right,
-          hsl(0, 0%, 100%) 0%,
-          hsla(0, 0%, 100%, 0.987) 8.1%,
-          hsla(0, 0%, 100%, 0.951) 15.5%,
-          hsla(0, 0%, 100%, 0.896) 22.5%,
-          hsla(0, 0%, 100%, 0.825) 29%,
-          hsla(0, 0%, 100%, 0.741) 35.3%,
-          hsla(0, 0%, 100%, 0.648) 41.2%,
-          hsla(0, 0%, 100%, 0.55) 47.1%,
-          hsla(0, 0%, 100%, 0.45) 52.9%,
-          hsla(0, 0%, 100%, 0.352) 58.8%,
-          hsla(0, 0%, 100%, 0.259) 64.7%,
-          hsla(0, 0%, 100%, 0.175) 71%,
-          hsla(0, 0%, 100%, 0.104) 77.5%,
-          hsla(0, 0%, 100%, 0.049) 84.5%,
-          hsla(0, 0%, 100%, 0.013) 91.9%,
-          hsla(0, 0%, 100%, 0) 100%
-        );
+        background: $white-gradient;
       }
 
       #map {

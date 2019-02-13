@@ -79,11 +79,27 @@
     .popover-inner {
       background: #fff;
       padding: ($margin / 3) ($margin / 2);
-      // box-shadow: 0 $size 30px rgba(black, .1);
       max-width: 500px;
       @extend %border-radius;
       @extend %border;
       @extend %box-shadow;
+
+
+      h6 {
+        font-weight: bold;
+        font-size: 1em;
+      }
+
+      h6,
+      p,
+      ul {
+        font-size: 1em;
+        margin-bottom: 0.75em;
+      }
+
+      ul {
+        padding-left: 1em;
+      }
     }
 
     .popover-arrow {
@@ -105,7 +121,8 @@
   }
 }
 
-em.info {
+
+.info {
   background: rgba(green, .1);
   font-style: normal;
   border-bottom: 1px solid green;

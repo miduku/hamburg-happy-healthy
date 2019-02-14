@@ -8,16 +8,16 @@
       <h6>{{ title }}</h6>
 
       <div
-        v-for="(c, i) in content"
+        v-for="(cntnt, i) in content"
         :key="i"
       >
-        <p v-if="c.constructor !== Array">
-          {{ c }}
+        <p v-if="cntnt.constructor !== Array">
+          {{ cntnt }}
         </p>
 
         <ul v-else>
           <li
-            v-for="(li, ii) in c"
+            v-for="(li, ii) in cntnt"
             :key="ii"
           >
             {{ li }}

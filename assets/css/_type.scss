@@ -38,6 +38,7 @@ h2 {
 
   @include tablet {
     width: 200%;
+    max-width: 1115px;
   }
 }
 

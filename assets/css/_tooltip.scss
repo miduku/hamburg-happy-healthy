@@ -22,7 +22,7 @@
       border-right-color: transparent !important;
       border-bottom-color: transparent !important;
       bottom: -$size;
-      left: calc(50% - $size);
+      left: calc(50% - #{$size});
       margin-top: 0;
       margin-bottom: 0;
     }
@@ -37,7 +37,7 @@
       border-right-color: transparent !important;
       border-top-color: transparent !important;
       top: -$size;
-      left: calc(50% - $size);
+      left: calc(50% - #{$size});
       margin-top: 0;
       margin-bottom: 0;
     }
@@ -52,7 +52,7 @@
       border-top-color: transparent !important;
       border-bottom-color: transparent !important;
       left: -$size;
-      top: calc(50% - $size);
+      top: calc(50% - #{$size});
       margin-left: 0;
       margin-right: 0;
     }
@@ -67,7 +67,7 @@
       border-right-color: transparent !important;
       border-bottom-color: transparent !important;
       right: -$size;
-      top: calc(50% - $size);
+      top: calc(50% - #{$size});
       margin-left: 0;
       margin-right: 0;
     }

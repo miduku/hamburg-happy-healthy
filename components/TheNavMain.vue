@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="nav-main">
     <div
       v-show="isNavOpen"
       class="overlay"
@@ -11,7 +11,11 @@
       :class="{ 'is-nav-open': isNavOpen }"
       :duration="750"
       :offset="0"
-      :style="[isNavOpen ? {'height': anchs.length * 2.5 + 0.1 + 'rem'} : '']"
+      :style="[
+        isNavOpen
+          ? {'height': anchs.length * 2.5 + 0.1 + 'rem'}
+          : ''
+      ]"
       bezier-easing-value="0.23, 1, 0.32, 1"
       always-track
       @itemchanged="onItemChanged"
@@ -144,6 +148,12 @@ export default {
         }
       }
     }
+
+    .chevron {
+      span {
+        transform: rotate(270deg);
+      }
+    }
   }
 
   .clicker {
@@ -168,6 +178,12 @@ export default {
     align-items: center;
     justify-content: center;
     pointer-events: none;
+
+    span {
+      color: darken($gray, 20%);
+      transform: rotate(90deg);
+      transition: transform 0.5s $easeOutQuint;
+    }
   }
 
   ul.nav {

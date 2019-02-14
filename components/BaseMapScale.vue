@@ -4,14 +4,33 @@
     :class="{ 'is-other-scale': isOtherScale }"
   >
     <div class="scale-einkommen">
-      <div class="left">
-        10.000
-      </div>
-      <div class="center">
+      <div class="scale-title">
         Einkommen
       </div>
-      <div class="right">
-        20.185
+      <div class="scale-content">
+        <div class="left">
+          13.777
+        </div>
+        <div class="right">
+          120.716
+        </div>
+      </div>
+    </div>
+
+    <div class="scale-person-gesundheitseinrichtungen">
+      <div class="scale-title">
+        Personen pro Gesundheitseinrichtungen
+      </div>
+      <div class="scale-content">
+        <div class="left">
+          4.020
+        </div>
+        <div class="left-65">
+          1.380
+        </div>
+        <div class="right">
+          0
+        </div>
       </div>
     </div>
   </div>
@@ -37,57 +56,90 @@ export default {
   position: relative;
   width: (100/3) * 1%;
   max-width: 500px;
+  min-width: 300px;
   height: $size-24;
   /* border: 2px solid $gray; */
   border-radius: 100px;
+  font-size: 0.8em;
+  font-weight: 500;
   @extend %box-shadow;
 
-  > div {
+  .scale-einkommen,
+  .scale-person-gesundheitseinrichtungen {
     position: absolute;
     border-radius: inherit;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    display: flex;
-    font-size: 0.8em;
-    font-weight: 500;
-    justify-content: center;
-    align-items: center;
-    padding: 0 1.6em;
-  }
-}
+    pointer-events: none;
+    transition: opacity 0.75s $easeOutQuint;
 
-.scale-einkommen {
-  background: linear-gradient(
-    to right,
-    #fff7f3 12.5%,
-    #fde0dd 25%,
-    #fcc5c0 37.5%,
-    #fa9fb5 50%,
-    #f768a1 62.5%,
-    #de3697 75%,
-    #aa017e 87.5%,
-    #7a0177 100%
-  );
-
-  div {
-    flex-grow: 1;
-    text-align: center;
-
-    &.left {
-      text-align: left;
-    }
-
-    &.center {
-      transform: translateY(-1.6em);
+    .scale-title {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      bottom: 105%;
+      text-align: center;
       text-shadow: 0px 4px 8px rgba($black, 0.25);
+      font-size: 0.8em;
+      /* line-height: 1; */
     }
 
-    &.right {
-      text-align: right;
-      color: $whisper;
+    .scale-content {
+      $padding-side: 4.8%;
+
+      div {
+        position: absolute;
+
+        &.left {
+          text-align: left;
+          left: $padding-side;
+        }
+
+        &.left-65 {
+          text-align: left;
+          left: 65.67164%;
+        }
+
+        &.right {
+          text-align: right;
+          color: $whisper;
+          right: $padding-side;
+        }
+      }
     }
+  }
+
+  &.is-other-scale {
+    .scale-person-gesundheitseinrichtungen {
+      opacity: 1;
+    }
+
+    .scale-einkommen {
+      opacity: 0;
+    }
+  }
+
+  .scale-person-gesundheitseinrichtungen {
+    opacity: 0;
+    background: linear-gradient(to right, #fff 65.67164%, #034e7b 100%);
+  }
+
+  .scale-einkommen {
+    opacity: 1;
+    background: linear-gradient(
+      to right,
+      #fff7f3 12.5%,
+      #fde0dd 25%,
+      #fcc5c0 37.5%,
+      #fa9fb5 50%,
+      #f768a1 62.5%,
+      #de3697 75%,
+      #aa017e 87.5%,
+      #7a0177 100%
+    );
   }
 }
 </style>

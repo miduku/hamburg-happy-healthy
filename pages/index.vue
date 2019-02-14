@@ -1,5 +1,11 @@
 <template>
-  <div class="container">
+  <div
+    class="container"
+    :class="{
+      'is-loading-done': isLoadingDone,
+      'is-intro': isIntro
+    }"
+  >
     <BarTop>
       <TheNavMain />
       <TheNavMeta />
@@ -8,24 +14,37 @@
 
     <div class="content">
       <div
+        class="intro"
+        @click.prevent="isIntro = false"
+      >
+        dawdawd
+      </div>
+
+      <div
         :class="{ 'has-pointer-events': hasPointerEvents }"
         class="map"
       >
         <BarBottomMap>
-          <MapScale />
+          <MapToggle
+            :is-active="hasMapToggle"
+            @toggle-status="mapToggleHandler"
+          />
+
+          <MapScale :is-other-scale="mapToggleStatus" />
         </BarBottomMap>
 
-        <Mapbox
-          :access-token="mapboxAccessToken"
-          :map-options="mapBoxOptions"
-          :nav-control="{
-            show: false,
-            position: 'top-right'
-          }"
-          @map-init="mapInitialized"
-          @map-load="mapLoaded"
-          @map-click="mapClicked"
-        />
+        <no-ssr>
+          <mapbox
+            :access-token="mapboxAccessToken"
+            :map-options="mapBoxOptions"
+            :nav-control="{
+              show: false,
+              position: 'top-right'
+            }"
+            @map-init="mapInitialized"
+            @map-load="mapLoaded"
+          />
+        </no-ssr>
       </div>
 
       <article>
@@ -72,6 +91,7 @@ import TheNavMeta from '~/components/TheNavMeta.vue'
 import BarTop from '~/components/BaseBarTop.vue'
 import BarBottomMap from '~/components/BaseBarBottomMap.vue'
 import MapScale from '~/components/BaseMapScale.vue'
+import MapToggle from '~/components/BaseMapToggle.vue'
 
 import cGesundheitsversorgungDeutschland from '~/components/content/cGesundheitsversorgungDeutschland.vue'
 import cUeberversorgtOderNicht from '~/components/content/cUeberversorgtOderNicht.vue'
@@ -87,6 +107,7 @@ export default {
     BarTop,
     BarBottomMap,
     MapScale,
+    MapToggle,
 
     // content
     cGesundheitsversorgungDeutschland,
@@ -101,8 +122,18 @@ export default {
 
   data() {
     return {
+      isLoadingDone: false,
       hasPointerEvents: false,
-      map: {},
+
+      isIntro: true,
+
+      hasMapBottomBar: false,
+      hasMapToggle: false,
+      mapToggleStatus: false,
+      isMapInit: false,
+      isMapLoaded: false,
+      thisMap: {},
+
       mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
       mapBoxOptions: {
         style: 'mapbox://styles/miduku/cjqbe0tc131jb2spn17qwvcsv',
@@ -113,8 +144,8 @@ export default {
         // dragPan: false,
         pitchWithRotate: false,
         keyboard: false,
-        bounds: [[9.6, 53.378], [10.37, 53.753]],
-        maxBounds: [[9.6, 53.378], [10.37, 53.753]]
+        maxBounds: [[9.55, 53.3], [10.4, 53.8]],
+        bounds: [[9.6, 53.378], [10.37, 53.753]]
       }
     }
   },
@@ -130,101 +161,210 @@ export default {
       // console.log(element, index, direction)
       // console.log(element)
 
-      switch (element.id) {
-        default:
-        case 'GesundheitsversorgungDeutschland':
-          this.map.flyTo({ zoom: 11 })
-          break
+      //
+      // only do this stuff if map is done init and loading
+      if (this.isMapInit && this.isMapLoaded) {
+        switch (element.id) {
+          default:
+          case 'GesundheitsversorgungDeutschland':
+            this.thisMap.fitBounds([[9.6, 53.378], [10.37, 53.753]])
+            this.thisMap.removeLayer('bezirk-fill')
 
-        case 'UeberversorgtOderNicht':
-          this.map.flyTo({ zoom: 12.5 })
-          break
+            this.hasMapToggle = false
+            break
+
+          case 'UeberversorgtOderNicht':
+            this.thisMap.flyTo({ zoom: 12.5 })
+            this.thisMap.addLayer({
+              id: 'bezirk-fill',
+              type: 'fill',
+              source: 'bezirke_social-status-index-2016',
+              layout: {},
+              paint: {
+                'fill-color': '#627BC1',
+                'fill-opacity': [
+                  'case',
+                  ['boolean', ['feature-state', 'hover'], false],
+                  1,
+                  0.5
+                ]
+              }
+            })
+
+            this.hasMapToggle = false
+            break
+
+          case 'ZugangGesundheitseinrichtungen':
+            this.hasMapToggle = false
+            break
+
+          case 'ZugangGesundheitseinrichtungenUndEinkommen':
+            this.thisMap.flyTo({ zoom: 11 })
+            this.hasMapToggle = true
+            break
+
+          case 'StadtteileEinkommensgruppe':
+            this.hasMapToggle = true
+            break
+
+          case 'CaseStudies':
+            this.hasMapToggle = true
+            break
+        }
       }
     },
 
-    mapClicked(map, e) {
-      this.addPopUp(map, e)
+    mapToggleHandler(status) {
+      this.mapToggleStatus = status
     },
 
-    addPopUp(map, e) {
-      const mapboxgl = require('mapbox-gl/dist/mapbox-gl')
-      const features = map.queryRenderedFeatures(e.point, {
-        layers: ['points']
-      })
+    // mapClicked(map, e) {
+    //   this.addPopUp(map, e)
+    // },
 
-      if (!features.length) {
-        return
-      }
+    // addPopUp(map, e) {
+    //   const mapboxgl = require('mapbox-gl/dist/mapbox-gl')
+    //   const features = map.queryRenderedFeatures(e.point, {
+    //     layers: ['points']
+    //   })
 
-      const feature = features[0]
+    //   if (!features.length) {
+    //     return
+    //   }
 
-      const popupContent = this.$extend({
-        methods: {
-          popupClicked() {
-            alert('Popup Clicked!')
-          }
-        },
-        template: '<button @click="popupClicked">Click Me!</button>'
-      })
+    //   const feature = features[0]
 
-      // Populate the popup and set its coordinates
-      // based on the feature found.
-      new mapboxgl.Popup()
-        .setLngLat(feature.geometry.coordinates)
-        .setHTML('<div id="vue-popup-content"></div>')
-        .addTo(map)
+    //   const popupContent = this.$extend({
+    //     methods: {
+    //       popupClicked() {
+    //         alert('Popup Clicked!')
+    //       }
+    //     },
+    //     template: '<button @click="popupClicked">Click Me!</button>'
+    //   })
 
-      new popupContent().$mount('#vue-popup-content')
-    },
+    //   // Populate the popup and set its coordinates
+    //   // based on the feature found.
+    //   new mapboxgl.Popup()
+    //     .setLngLat(feature.geometry.coordinates)
+    //     .setHTML('<div id="vue-popup-content"></div>')
+    //     .addTo(map)
+
+    //   new popupContent().$mount('#vue-popup-content')
+    // },
 
     mapInitialized(map) {
       console.log('map init')
-      this.map = map
+      this.thisMap = map
+      this.isMapInit = true
     },
 
     mapLoaded(map) {
       console.log('map loaded')
 
-      map.addSource('bezirke_social-status-index-2016', {
+      this.thisMap.addSource('bezirke_social-status-index-2016', {
         type: 'geojson',
         data:
           '/map-jsons/hamburg-stadtteile-bezirke_social-status-index-2016.geojson'
       })
 
-      map.addLayer({
-        id: 'bezirk-fill',
-        type: 'fill',
-        source: 'bezirke_social-status-index-2016',
-        layout: {},
-        paint: {
-          'fill-color': '#627BC1',
-          'fill-opacity': [
-            'case',
-            ['boolean', ['feature-state', 'hover'], false],
-            1,
-            0.5
-          ]
-        }
-      })
+      this.isMapLoaded = true
+      this.isLoadingDone = true
     }
   }
 }
 </script>
 
+
 <style lang="scss" scoped>
 .container {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s $easeOutQuint;
+
+  &.is-intro {
+    height: 100vh;
+    overflow: hidden;
+
+    .bar-top {
+      transform: translateY(#{-$margin * 8});
+    }
+
+    .content {
+      .intro {
+        transform: translateY(0);
+      }
+
+      article {
+        transform: translateX(-50vw);
+      }
+
+      .map {
+        .bar-bottom-map {
+          transform: translateY(#{$margin * 2});
+        }
+      }
+    }
+  }
+
+  &.is-loading-done {
+    opacity: 1;
+    pointer-events: all;
+
+    .content {
+      overflow: unset;
+    }
+  }
+
   @include until(1024px) {
     display: none;
   }
 
+  .bar-top {
+    transform: translateY(0);
+    transition: transform 1s 1s $easeOutQuint;
+  }
+
   .content {
+    position: relative;
+    overflow: hidden;
+
+    .intro {
+      position: absolute;
+      background: linear-gradient(
+        to right,
+        rgba($blue, 1) 33%,
+        rgba($blue, 0.9) 100%
+      );
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: 999;
+      overflow-y: scroll;
+      transform: translateY(-100vh);
+      transition: transform 1s $easeOutQuint;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('/pics/bgr-intro.svg') 50% 50% no-repeat;
+      }
+    }
+
     article {
       position: relative;
-      width: (100 / 3) * 1%;
+      width: (100 / 3) * 1vw;
       /* max-width: 30 * $size-20; */
       margin: 0 0 ($margin * 2);
       padding-left: $margin * 2;
       background: #fff;
+      transform: translateX(0);
+      transition: transform 0.75s $easeOutQuint;
 
       @include from(2040px) {
         width: 675px;
@@ -243,14 +383,13 @@ export default {
       top: 0;
       left: 0;
       height: 100vh;
-      width: (100 / 3) * 2 * 1%;
-      margin-left: (100 / 3) * 1%;
+      width: (100 / 3) * 2 * 1vw;
+      margin-left: (100 / 3) * 1vw;
       background: $gray;
-      /* pointer-events: none; */
 
       @include from(2040px) {
         margin-left: 733px;
-        width: calc(100% - 733px);
+        width: calc(100vw - 733px);
       }
 
       &.has-pointer-events {
@@ -268,6 +407,10 @@ export default {
         pointer-events: none;
         z-index: 1;
         background: $white-gradient;
+      }
+
+      .bar-bottom-map {
+        transition: transform 1s $easeOutQuint;
       }
 
       #map {

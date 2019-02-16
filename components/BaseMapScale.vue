@@ -57,10 +57,10 @@ export default {
   width: (100/3) * 1%;
   max-width: 500px;
   min-width: 300px;
-  height: $size-24;
+  height: $size-20;
   /* border: 2px solid $gray; */
   border-radius: 100px;
-  font-size: 0.8em;
+  font-size: 0.6em;
   font-weight: 500;
   @extend %box-shadow;
 
@@ -82,13 +82,15 @@ export default {
       left: 0;
       bottom: 105%;
       text-align: center;
-      text-shadow: 0px 4px 8px rgba($black, 0.25);
-      font-size: 0.8em;
+      font-weight: bold;
+      text-shadow: 0px 0px 8px rgba(#fff, 1), 0px 0px 8px rgba(#fff, 1),
+        0px 0px 8px rgba(#fff, 1);
+      /* font-size: 0.8em; */
       /* line-height: 1; */
     }
 
     .scale-content {
-      $padding-side: 4.8%;
+      $padding-side: 3.6%;
 
       div {
         position: absolute;

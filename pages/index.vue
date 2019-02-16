@@ -21,10 +21,9 @@
       </div>
 
       <div
-        :class="{ 'has-pointer-events': hasPointerEvents }"
         class="map"
       >
-        <BarBottomMap>
+        <BarBottomMap :class="{ 'has-bar-bottom-map': hasBarBottomMap }">
           <MapToggle
             :is-active="hasMapToggle"
             @toggle-status="mapToggleHandler"
@@ -35,6 +34,7 @@
 
         <no-ssr>
           <mapbox
+            :class="{ 'has-no-pointer-events': !hasPointerEvents }"
             :access-token="mapboxAccessToken"
             :map-options="mapBoxOptions"
             :nav-control="{
@@ -43,6 +43,8 @@
             }"
             @map-init="mapInitialized"
             @map-load="mapLoaded"
+            @map-zoomstart="mapZoomStart"
+            @map-zoomend="mapZoomEnd"
           />
         </no-ssr>
       </div>
@@ -127,25 +129,35 @@ export default {
 
       isIntro: true,
 
-      hasMapBottomBar: false,
+      hasBarBottomMap: false,
       hasMapToggle: false,
       mapToggleStatus: false,
       isMapInit: false,
       isMapLoaded: false,
       thisMap: {},
 
+      doAtZoomEnd: Function,
+
+      maxBounds_germany: [[3.9, 46.7], [16, 55.8]],
+      bounds_germany: [[4, 47], [15.9, 55]],
+      maxBounds_hamburg: [[9.55, 53.3], [10.4, 53.8]],
+      bounds_hamburg: [[9.6, 53.378], [10.37, 53.753]],
       mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
       mapBoxOptions: {
         style: 'mapbox://styles/miduku/cjqbe0tc131jb2spn17qwvcsv',
         center: [10.018, 53.569],
-        zoom: 9.75,
+        // zoom: 9.75,
         attributionControl: false,
         dragRotate: false,
         // dragPan: false,
         pitchWithRotate: false,
         keyboard: false,
-        maxBounds: [[9.55, 53.3], [10.4, 53.8]],
-        bounds: [[9.6, 53.378], [10.37, 53.753]]
+        touchZoomRotate: false,
+        doubleClickZoom: false,
+        scrollZoom: false,
+        boxZoom: false
+        // maxBounds: [[9.55, 53.3], [10.4, 53.8]],
+        // bounds: [[9.6, 53.378], [10.37, 53.753]]
       }
     }
   },
@@ -153,65 +165,84 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.createAnchors()
+      // this.mapBoxOptions.maxBounds = this.maxBounds_germany
+      this.mapBoxOptions.bounds = this.bounds_germany
     })
   },
 
   methods: {
     scrollamaStepEnterHandler({ element, index, direction }) {
-      // console.log(element, index, direction)
-      // console.log(element)
-
-      //
       // only do this stuff if map is done init and loading
       if (this.isMapInit && this.isMapLoaded) {
         switch (element.id) {
           default:
           case 'GesundheitsversorgungDeutschland':
-            this.thisMap.fitBounds([[9.6, 53.378], [10.37, 53.753]])
+            this.hasPointerEvents = false
+            this.thisMap.fitBounds(this.bounds_germany)
             this.thisMap.removeLayer('bezirk-fill')
+            this.doAtZoomEnd = () => {}
 
+            this.hasBarBottomMap = false
             this.hasMapToggle = false
             break
 
           case 'UeberversorgtOderNicht':
-            this.thisMap.flyTo({ zoom: 12.5 })
-            this.thisMap.addLayer({
-              id: 'bezirk-fill',
-              type: 'fill',
-              source: 'bezirke_social-status-index-2016',
-              layout: {},
-              paint: {
-                'fill-color': '#627BC1',
-                'fill-opacity': [
-                  'case',
-                  ['boolean', ['feature-state', 'hover'], false],
-                  1,
-                  0.5
-                ]
-              }
-            })
+            // this.thisMap.flyTo({ zoom: 12.5 })
+            this.hasPointerEvents = false
+            this.thisMap.fitBounds(this.bounds_hamburg)
+            this.doAtZoomEnd = () => {
+              this.thisMap.addLayer({
+                id: 'bezirk-fill',
+                type: 'fill',
+                source: 'bezirke_social-status-index-2016',
+                layout: {},
+                paint: {
+                  'fill-color': '#627BC1',
+                  'fill-opacity': [
+                    'case',
+                    ['boolean', ['feature-state', 'hover'], false],
+                    1,
+                    0.5
+                  ]
+                }
+              })
+            }
 
+            this.hasBarBottomMap = true
             this.hasMapToggle = false
             break
 
           case 'ZugangGesundheitseinrichtungen':
+            this.hasPointerEvents = false
             this.hasMapToggle = false
             break
 
           case 'ZugangGesundheitseinrichtungenUndEinkommen':
+            this.hasPointerEvents = false
             this.thisMap.flyTo({ zoom: 11 })
             this.hasMapToggle = true
             break
 
           case 'StadtteileEinkommensgruppe':
+            this.hasPointerEvents = false
             this.hasMapToggle = true
             break
 
           case 'CaseStudies':
+            this.hasPointerEvents = false
             this.hasMapToggle = true
             break
         }
       }
+    },
+
+    mapZoomStart() {
+      // this.hasPointerEvents = false
+    },
+
+    mapZoomEnd() {
+      // this.hasPointerEvents = true
+      return this.doAtZoomEnd()
     },
 
     mapToggleHandler(status) {
@@ -296,12 +327,12 @@ export default {
       }
 
       article {
-        transform: translateX(-50vw);
+        opacity: 0;
       }
 
       .map {
         .bar-bottom-map {
-          transform: translateY(#{$margin * 2});
+          transform: translateY(#{$margin * 4});
         }
       }
     }
@@ -358,16 +389,19 @@ export default {
 
     article {
       position: relative;
+      opacity: 1;
+      transition: opacity 1s 0.5s $easeOutQuint;
+      display: inline-block;
       width: (100 / 3) * 1vw;
       /* max-width: 30 * $size-20; */
-      margin: 0 0 ($margin * 2);
-      padding-left: $margin * 2;
+      /* margin: 0 0 ($margin * 2); */
+      padding: 0 ($margin * 2);
       background: #fff;
-      transform: translateX(0);
-      transition: transform 0.75s $easeOutQuint;
+      border-right: 2px solid $gray;
+      @extend %box-shadow;
 
       @include from(2040px) {
-        width: 675px;
+        width: $max-side-width;
       }
 
       .step {
@@ -388,15 +422,15 @@ export default {
       background: $gray;
 
       @include from(2040px) {
-        margin-left: 733px;
-        width: calc(100vw - 733px);
+        margin-left: $max-side-width;
+        width: calc(100vw - #{$max-side-width});
       }
 
-      &.has-pointer-events {
-        pointer-events: all;
+      .has-no-pointer-events {
+        pointer-events: none;
       }
 
-      &::before {
+      /* &::before {
         content: '';
         position: absolute;
         left: 0;
@@ -407,10 +441,15 @@ export default {
         pointer-events: none;
         z-index: 1;
         background: $white-gradient;
-      }
+      } */
 
       .bar-bottom-map {
         transition: transform 1s $easeOutQuint;
+        transform: translateY(#{$margin * 4});
+
+        &.has-bar-bottom-map {
+          transform: translateY(0);
+        }
       }
 
       #map {

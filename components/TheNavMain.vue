@@ -13,7 +13,7 @@
       :offset="0"
       :style="[
         isNavOpen
-          ? {'height': anchs.length * 2.5 + 0.1 + 'rem'}
+          ? {'height': anchs.length * 2.2 + 0.1 + 'em'}
           : ''
       ]"
       bezier-easing-value="0.23, 1, 0.32, 1"
@@ -28,8 +28,8 @@
       <ul
         class="nav"
         :style="{
-          'height': anchs.length * 2.5 + 'rem' ,
-          'transform': `translateY(${isNavOpen ? 0 : (currAnchId * 2.5 * -1)}rem`
+          'height': `${currAnchId * 3.666666}em`,
+          'transform': `translateY(${isNavOpen ? 0 : (currAnchId * 3.666666 * -1)}em`
         }"
       >
         <li
@@ -138,6 +138,8 @@ export default {
     ul.nav {
       li {
         a {
+          line-height: 1.3;
+
           &.is-active {
             background: darken(#fff, 5%);
           }
@@ -195,15 +197,20 @@ export default {
     transition: transform 0.3s $easeOutQuint;
 
     li {
+      height: 3.666666em;
+
       a {
         line-height: 1;
         position: relative;
+        height: inherit;
+        max-height: 3.666666em;
         display: block;
-        padding: $button-padding 6em $button-padding $button-padding;
+        padding: $button-padding 3.5em $button-padding $button-padding;
         background: #fff;
         text-decoration: none;
         color: rgba($black, 0.7);
         font-weight: 500;
+        transition: line-height 0.5s $easeOutQuint;
         @extend %is-uppercased;
 
         &:focus,

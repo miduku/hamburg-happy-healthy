@@ -54,7 +54,7 @@ export default {
   flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
-  font-size: 0.8em;
+  font-size: 0.6em;
   font-weight: 500;
   padding: 0.25em 0.5em;
   background: #fff;

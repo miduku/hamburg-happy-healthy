@@ -83,8 +83,8 @@ export default {
       bottom: 105%;
       text-align: center;
       font-weight: bold;
-      text-shadow: 0px 0px 8px rgba(#fff, 1), 0px 0px 8px rgba(#fff, 1),
-        0px 0px 8px rgba(#fff, 1);
+      text-shadow: 0px 0px 4px rgba(#fff, 1), 0px 0px 4px rgba(#fff, 1),
+        0px 0px 4px rgba(#fff, 1);
       /* font-size: 0.8em; */
       /* line-height: 1; */
     }

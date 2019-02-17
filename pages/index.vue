@@ -77,6 +77,7 @@
 
           <div id="CaseStudies" class="step anchor">
             <cCaseStudies />
+            <TheCaseStudySelector />
           </div>
         </Scrollama>
       </article>
@@ -90,6 +91,7 @@ import anchorElements from '~/mixins/anchorElements'
 
 import TheNavMain from '~/components/TheNavMain.vue'
 import TheNavMeta from '~/components/TheNavMeta.vue'
+import TheCaseStudySelector from '~/components/TheCaseStudySelector.vue'
 import BarTop from '~/components/BaseBarTop.vue'
 import BarBottomMap from '~/components/BaseBarBottomMap.vue'
 import MapScale from '~/components/BaseMapScale.vue'
@@ -106,6 +108,7 @@ export default {
   components: {
     TheNavMain,
     TheNavMeta,
+    TheCaseStudySelector,
     BarTop,
     BarBottomMap,
     MapScale,
@@ -214,22 +217,26 @@ export default {
 
           case 'ZugangGesundheitseinrichtungen':
             this.hasPointerEvents = false
+            this.thisMap.fitBounds(this.bounds_hamburg)
             this.hasMapToggle = false
             break
 
           case 'ZugangGesundheitseinrichtungenUndEinkommen':
             this.hasPointerEvents = false
+            this.thisMap.fitBounds(this.bounds_hamburg)
             this.thisMap.flyTo({ zoom: 11 })
             this.hasMapToggle = true
             break
 
           case 'StadtteileEinkommensgruppe':
             this.hasPointerEvents = false
+            this.thisMap.fitBounds(this.bounds_hamburg)
             this.hasMapToggle = true
             break
 
           case 'CaseStudies':
             this.hasPointerEvents = false
+            this.thisMap.fitBounds(this.bounds_hamburg)
             this.hasMapToggle = true
             break
         }
@@ -397,8 +404,8 @@ export default {
       /* margin: 0 0 ($margin * 2); */
       padding: 0 ($margin * 2);
       background: #fff;
-      border-right: 2px solid $gray;
-      @extend %box-shadow;
+      /* border-right: 2px solid $gray; */
+      /* @extend %box-shadow; */
 
       @include from(2040px) {
         width: $max-side-width;
@@ -406,7 +413,7 @@ export default {
 
       .step {
         display: block;
-        margin-bottom: $margin * 10;
+        padding-bottom: $margin * 10;
         padding-top: $margin * 8;
         min-height: 100vh;
       }
@@ -430,7 +437,7 @@ export default {
         pointer-events: none;
       }
 
-      /* &::before {
+      &::before {
         content: '';
         position: absolute;
         left: 0;
@@ -441,7 +448,7 @@ export default {
         pointer-events: none;
         z-index: 1;
         background: $white-gradient;
-      } */
+      }
 
       .bar-bottom-map {
         transition: transform 1s $easeOutQuint;

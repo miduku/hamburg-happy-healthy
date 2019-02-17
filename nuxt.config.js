@@ -65,7 +65,9 @@ module.exports = {
     preset: 'default',
     html: true,
     linkify: true,
-    breaks: true
+    breaks: true,
+    typographer: true,
+    quotes: '„“‚‘'
   },
   /*
   ** Axios module configuration

@@ -19,7 +19,7 @@
 
     <div class="scale-person-gesundheitseinrichtungen">
       <div class="scale-title">
-        Personen pro Gesundheitseinrichtungen
+        Person pro Gesundheitseinrichtungen
       </div>
       <div class="scale-content">
         <div class="left">
@@ -94,6 +94,7 @@ export default {
 
       div {
         position: absolute;
+        top: 0.25em;
 
         &.left {
           text-align: left;

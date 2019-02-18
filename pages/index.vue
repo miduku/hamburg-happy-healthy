@@ -8,21 +8,18 @@
   >
     <BarTop>
       <TheNavMain />
-      <TheNavMeta />
+      <TheNavMeta
+        @click-intro="isIntro = true"
+      />
     </BarTop>
 
 
     <div class="content">
-      <div
-        class="intro"
-        @click.prevent="isIntro = false"
-      >
-        dawdawd
+      <div class="intro">
+        <cIntro @close-intro="isIntro = false" />
       </div>
 
-      <div
-        class="map"
-      >
+      <div class="map">
         <BarBottomMap :class="{ 'has-bar-bottom-map': hasBarBottomMap }">
           <MapToggle
             :is-active="hasMapToggle"
@@ -51,31 +48,75 @@
 
       <article>
         <Scrollama
-          :offset="0.025"
+          :offset="0.5"
           :debug="true"
           @step-enter="scrollamaStepEnterHandler"
         >
-          <div id="GesundheitsversorgungDeutschland" class="step anchor">
+          <div
+            id="GesundheitsversorgungDeutschland"
+            class="step anchor"
+          >
             <cGesundheitsversorgungDeutschland />
           </div>
 
-          <div id="UeberversorgtOderNicht" class="step anchor">
+          <div
+            id="UeberversorgtOderNicht"
+            class="step anchor"
+          >
             <cUeberversorgtOderNicht />
           </div>
 
-          <div id="ZugangGesundheitseinrichtungen" class="step anchor">
+          <div
+            id="ZugangGesundheitseinrichtungen"
+            class="step anchor"
+          >
             <cZugangGesundheitseinrichtungen />
           </div>
 
-          <div id="ZugangGesundheitseinrichtungenUndEinkommen" class="step anchor">
+          <div
+            id="ZugangGesundheitseinrichtungenUndEinkommen"
+            class="step anchor"
+          >
             <cZugangGesundheitseinrichtungenUndEinkommen />
           </div>
 
-          <div id="StadtteileEinkommensgruppe" class="step anchor">
-            <cStadtteileEinkommensgruppe />
+          <div
+            id="StadtteileEinkommensgruppeHoch"
+            class="step anchor"
+            style="padding-bottom: 0"
+          >
+            <cStadtteileEinkommensgruppeHoch />
           </div>
 
-          <div id="CaseStudies" class="step anchor">
+          <div
+            id="StadtteileEinkommensgruppeMittel"
+            class="step"
+            style="padding: 0"
+          >
+            <cStadtteileEinkommensgruppeMittel />
+          </div>
+
+          <div
+            id="StadtteileEinkommensgruppeNiedrig"
+            class="step"
+            style="padding: 0"
+          >
+            <cStadtteileEinkommensgruppeNiedrig />
+          </div>
+
+          <div
+            id="StadtteileEinkommensgruppeAlle"
+            class="step"
+            style="padding-top: 0"
+          >
+            <cStadtteileEinkommensgruppeAlle />
+          </div>
+
+          <div
+            id="CaseStudies"
+            class="step anchor"
+            style="min-height: 100vh;"
+          >
             <cCaseStudies />
             <TheCaseStudySelector />
           </div>
@@ -97,11 +138,15 @@ import BarBottomMap from '~/components/BaseBarBottomMap.vue'
 import MapScale from '~/components/BaseMapScale.vue'
 import MapToggle from '~/components/BaseMapToggle.vue'
 
+import cIntro from '~/components/content/cIntro.vue'
 import cGesundheitsversorgungDeutschland from '~/components/content/cGesundheitsversorgungDeutschland.vue'
 import cUeberversorgtOderNicht from '~/components/content/cUeberversorgtOderNicht.vue'
 import cZugangGesundheitseinrichtungen from '~/components/content/cZugangGesundheitseinrichtungen.vue'
 import cZugangGesundheitseinrichtungenUndEinkommen from '~/components/content/cZugangGesundheitseinrichtungenUndEinkommen.vue'
-import cStadtteileEinkommensgruppe from '~/components/content/cStadtteileEinkommensgruppe.vue'
+import cStadtteileEinkommensgruppeHoch from '~/components/content/cStadtteileEinkommensgruppeHoch.vue'
+import cStadtteileEinkommensgruppeMittel from '~/components/content/cStadtteileEinkommensgruppeMittel.vue'
+import cStadtteileEinkommensgruppeNiedrig from '~/components/content/cStadtteileEinkommensgruppeNiedrig.vue'
+import cStadtteileEinkommensgruppeAlle from '~/components/content/cStadtteileEinkommensgruppeAlle.vue'
 import cCaseStudies from '~/components/content/cCaseStudies.vue'
 
 export default {
@@ -115,11 +160,15 @@ export default {
     MapToggle,
 
     // content
+    cIntro,
     cGesundheitsversorgungDeutschland,
     cUeberversorgtOderNicht,
     cZugangGesundheitseinrichtungen,
     cZugangGesundheitseinrichtungenUndEinkommen,
-    cStadtteileEinkommensgruppe,
+    cStadtteileEinkommensgruppeHoch,
+    cStadtteileEinkommensgruppeMittel,
+    cStadtteileEinkommensgruppeNiedrig,
+    cStadtteileEinkommensgruppeAlle,
     cCaseStudies
   },
 
@@ -165,6 +214,14 @@ export default {
     }
   },
 
+  head() {
+    return {
+      bodyAttrs: {
+        class: this.isIntro ? 'lock-scroll' : ''
+      }
+    }
+  },
+
   mounted() {
     this.$nextTick(() => {
       this.createAnchors()
@@ -180,6 +237,7 @@ export default {
         switch (element.id) {
           default:
           case 'GesundheitsversorgungDeutschland':
+            console.log(element.id)
             this.hasPointerEvents = false
             this.thisMap.fitBounds(this.bounds_germany)
             this.thisMap.removeLayer('bezirk-fill')
@@ -190,6 +248,7 @@ export default {
             break
 
           case 'UeberversorgtOderNicht':
+            console.log(element.id)
             // this.thisMap.flyTo({ zoom: 12.5 })
             this.hasPointerEvents = false
             this.thisMap.fitBounds(this.bounds_hamburg)
@@ -216,25 +275,50 @@ export default {
             break
 
           case 'ZugangGesundheitseinrichtungen':
+            console.log(element.id)
             this.hasPointerEvents = false
             this.thisMap.fitBounds(this.bounds_hamburg)
             this.hasMapToggle = false
             break
 
           case 'ZugangGesundheitseinrichtungenUndEinkommen':
+            console.log(element.id)
             this.hasPointerEvents = false
             this.thisMap.fitBounds(this.bounds_hamburg)
             this.thisMap.flyTo({ zoom: 11 })
             this.hasMapToggle = true
             break
 
-          case 'StadtteileEinkommensgruppe':
+          case 'StadtteileEinkommensgruppeHoch':
+            console.log(element.id)
+            this.hasPointerEvents = false
+            this.thisMap.fitBounds(this.bounds_hamburg)
+            this.hasMapToggle = true
+            break
+
+          case 'StadtteileEinkommensgruppeMittel':
+            console.log(element.id)
+            this.hasPointerEvents = false
+            this.thisMap.fitBounds(this.bounds_hamburg)
+            this.hasMapToggle = true
+            break
+
+          case 'StadtteileEinkommensgruppeNiedrig':
+            console.log(element.id)
+            this.hasPointerEvents = false
+            this.thisMap.fitBounds(this.bounds_hamburg)
+            this.hasMapToggle = true
+            break
+
+          case 'StadtteileEinkommensgruppeAlle':
+            console.log(element.id)
             this.hasPointerEvents = false
             this.thisMap.fitBounds(this.bounds_hamburg)
             this.hasMapToggle = true
             break
 
           case 'CaseStudies':
+            console.log(element.id)
             this.hasPointerEvents = false
             this.thisMap.fitBounds(this.bounds_hamburg)
             this.hasMapToggle = true
@@ -321,9 +405,6 @@ export default {
   transition: opacity 1s $easeOutQuint;
 
   &.is-intro {
-    height: 100vh;
-    overflow: hidden;
-
     .bar-top {
       transform: translateY(#{-$margin * 8});
     }
@@ -368,7 +449,7 @@ export default {
     overflow: hidden;
 
     .intro {
-      position: absolute;
+      position: fixed;
       background: linear-gradient(
         to right,
         rgba($blue, 1) 33%,
@@ -399,7 +480,7 @@ export default {
       opacity: 1;
       transition: opacity 1s 0.5s $easeOutQuint;
       display: inline-block;
-      width: (100 / 3) * 1vw;
+      width: $width-article * 1vw;
       /* max-width: 30 * $size-20; */
       /* margin: 0 0 ($margin * 2); */
       padding: 0 ($margin * 2);
@@ -413,9 +494,8 @@ export default {
 
       .step {
         display: block;
-        padding-bottom: $margin * 10;
-        padding-top: $margin * 8;
-        min-height: 100vh;
+        padding-bottom: $margin * 6;
+        padding-top: $margin * 6;
       }
     }
 
@@ -424,8 +504,8 @@ export default {
       top: 0;
       left: 0;
       height: 100vh;
-      width: (100 / 3) * 2 * 1vw;
-      margin-left: (100 / 3) * 1vw;
+      width: $width-map * 1vw;
+      margin-left: $width-article * 1vw;
       background: $gray;
 
       @include from(2040px) {
@@ -442,7 +522,7 @@ export default {
         position: absolute;
         left: 0;
         top: 0;
-        width: (100 / 3) * 1%;
+        width: $width-article * 1%;
         height: 100%;
         max-width: 200px;
         pointer-events: none;

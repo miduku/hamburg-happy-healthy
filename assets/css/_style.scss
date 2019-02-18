@@ -7,6 +7,12 @@ html {
   background: #fff;
 }
 
+body {
+  &.lock-scroll {
+    overflow: hidden;
+  }
+}
+
 html,
 body {
   color: $black;

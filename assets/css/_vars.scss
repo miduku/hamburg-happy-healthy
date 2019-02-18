@@ -15,7 +15,7 @@ $size-16-vw: 1.6vw;  // 16px @ 1000px
 $size-20-vw: 2vw;  // 20px @ 1000px
 $size-24-vw: 2.4vw;  // 24px @ 1000px
 
-$font-size: $size-20;
+$font-size: $size-16;
 $font-size-vw: $size-20-vw;
 $letter-spacing: .025em;
 
@@ -24,6 +24,8 @@ $margin: $size-32;
 $button-padding: 1.1666666em;
 
 $max-side-width: 675px;
+$width-article: (100 / 5) * 2;
+$width-map: (100 / 5) * 3;
 
 
 

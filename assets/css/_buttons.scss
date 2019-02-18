@@ -3,6 +3,10 @@ a.button,
   @extend %button;
 }
 
+button {
+  cursor: pointer;
+}
+
 
 ul.button-group {
   display: flex;

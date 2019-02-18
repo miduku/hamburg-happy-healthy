@@ -2,7 +2,10 @@
   <nav class="nav-meta">
     <ul class="button-group nav">
       <li>
-        <a href="#">
+        <a
+          href="#"
+          @click.stop.prevent="$emit('click-intro')"
+        >
           Über das Projekt
         </a>
       </li>

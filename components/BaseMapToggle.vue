@@ -3,7 +3,7 @@
     class="map-toggle"
     :class="{
       'is-active': isActive,
-      'is-toggled': isToggled
+      'is-toggled': isToggledRight
     }"
     @click.prevent="toggle()"
   >
@@ -26,19 +26,30 @@ export default {
     isActive: {
       type: Boolean,
       required: true
+    },
+    isToggledRightOverride: {
+      type: Boolean,
+      required: true,
+      default: false
     }
   },
 
   data() {
     return {
-      isToggled: false
+      isToggledRight: false
+    }
+  },
+
+  watch: {
+    isToggledRightOverride(val) {
+      this.isToggledRight = val
     }
   },
 
   methods: {
     toggle() {
-      this.isToggled = !this.isToggled
-      this.$emit('toggle-status', this.isToggled)
+      this.isToggledRight = !this.isToggledRight
+      this.$emit('toggle-status', this.isToggledRight)
     }
   }
 }

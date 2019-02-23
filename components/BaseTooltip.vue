@@ -11,17 +11,17 @@
         v-for="(cntnt, i) in content"
         :key="i"
       >
-        <p v-if="cntnt.constructor !== Array">
-          {{ cntnt }}
-        </p>
+        <p
+          v-if="cntnt.constructor !== Array"
+          v-html="cntnt"
+        />
 
         <ul v-else>
           <li
             v-for="(li, ii) in cntnt"
             :key="ii"
-          >
-            {{ li }}
-          </li>
+            v-html="li"
+          />
         </ul>
       </div>
     </template>

@@ -1,6 +1,28 @@
 a.button,
 .button {
+  font-weight: bold;
   @extend %button;
+  @extend %button-transition;
+  @extend %border-radius;
+  @extend %border;
+
+  &.is-wide {
+    padding-right: 8em;
+    padding-left: 8em;
+  }
+
+  &.is-outlined {
+    background: transparent;
+    color: #fff;
+    border-color: #fff;
+
+    &:focus,
+    &:hover {
+      background: #fff;
+      color: $black;
+      @extend %border;
+    }
+  }
 }
 
 button {
@@ -20,6 +42,7 @@ ul.button-group {
 
   > li {
     padding: 0;
+    @extend %button-transition;
     @extend %button;
 
     > a {

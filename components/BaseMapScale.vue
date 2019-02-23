@@ -103,6 +103,7 @@ export default {
 
         &.left-65 {
           text-align: left;
+          color: $whisper;
           left: 65.67164%;
         }
 
@@ -127,13 +128,26 @@ export default {
 
   .scale-person-gesundheitseinrichtungen {
     opacity: 0;
-    background: linear-gradient(to right, #fff 65.67164%, #034e7b 100%);
+    /* background: linear-gradient(to right, #fff 65.67164%, #034e7b 100%); */
+    background: linear-gradient(
+      to right,
+      #fff 0%,
+      #fff 12.5%,
+      #f1eef6 25%,
+      #d0d1e6 37.5%,
+      #a6bddb 50%,
+      #74a9cf 62.5%,
+      #3690c0 75%,
+      #0570b0 87.5%,
+      #034e7b 100%
+    );
   }
 
   .scale-einkommen {
     opacity: 1;
     background: linear-gradient(
       to right,
+      #fff7f3 0%,
       #fff7f3 12.5%,
       #fde0dd 25%,
       #fcc5c0 37.5%,

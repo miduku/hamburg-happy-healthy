@@ -2,15 +2,13 @@
   <div
     class="container"
     :class="{
-      'is-loading-done': isLoadingDone,
+      'is-loading-done': isMapLoaded,
       'is-intro': isIntro
     }"
   >
     <BarTop>
       <TheNavMain />
-      <TheNavMeta
-        @click-intro="isIntro = true"
-      />
+      <TheNavMeta @click-intro="isIntro = true" />
     </BarTop>
 
 
@@ -23,10 +21,11 @@
         <BarBottomMap :class="{ 'has-bar-bottom-map': hasBarBottomMap }">
           <MapToggle
             :is-active="hasMapToggle"
-            @toggle-status="mapToggleHandler"
+            :is-toggled-right-override="mapIsToggledRight"
+            @toggle-status="mapToggledRightHandler"
           />
 
-          <MapScale :is-other-scale="mapToggleStatus" />
+          <MapScale :is-other-scale="mapIsToggledRight" />
         </BarBottomMap>
 
         <no-ssr>
@@ -49,14 +48,13 @@
       <article>
         <Scrollama
           :offset="0.5"
-          :debug="true"
           @step-enter="scrollamaStepEnterHandler"
         >
           <div
-            id="GesundheitsversorgungDeutschland"
+            id="Einleitung"
             class="step anchor"
           >
-            <cGesundheitsversorgungDeutschland />
+            <cEinleitung />
           </div>
 
           <div
@@ -118,7 +116,10 @@
             style="min-height: 100vh;"
           >
             <cCaseStudies />
-            <TheCaseStudySelector />
+            <TheCaseStudySelector
+              v-if="isMapLoaded"
+              @current-case-study="currentCaseStudyHandler"
+            />
           </div>
         </Scrollama>
       </article>
@@ -128,6 +129,8 @@
 
 
 <script>
+import mapColorScales from '~/assets/json/map-color-scales.json'
+
 import anchorElements from '~/mixins/anchorElements'
 
 import TheNavMain from '~/components/TheNavMain.vue'
@@ -139,7 +142,7 @@ import MapScale from '~/components/BaseMapScale.vue'
 import MapToggle from '~/components/BaseMapToggle.vue'
 
 import cIntro from '~/components/content/cIntro.vue'
-import cGesundheitsversorgungDeutschland from '~/components/content/cGesundheitsversorgungDeutschland.vue'
+import cEinleitung from '~/components/content/cEinleitung.vue'
 import cUeberversorgtOderNicht from '~/components/content/cUeberversorgtOderNicht.vue'
 import cZugangGesundheitseinrichtungen from '~/components/content/cZugangGesundheitseinrichtungen.vue'
 import cZugangGesundheitseinrichtungenUndEinkommen from '~/components/content/cZugangGesundheitseinrichtungenUndEinkommen.vue'
@@ -161,7 +164,7 @@ export default {
 
     // content
     cIntro,
-    cGesundheitsversorgungDeutschland,
+    cEinleitung,
     cUeberversorgtOderNicht,
     cZugangGesundheitseinrichtungen,
     cZugangGesundheitseinrichtungenUndEinkommen,
@@ -176,17 +179,20 @@ export default {
 
   data() {
     return {
-      isLoadingDone: false,
       hasPointerEvents: false,
 
       isIntro: true,
+      isCaseStudy: false,
+      currentselectedcasestudy: '',
 
       hasBarBottomMap: false,
       hasMapToggle: false,
-      mapToggleStatus: false,
+      mapIsToggledRight: true,
       isMapInit: false,
       isMapLoaded: false,
       thisMap: {},
+      mapLayerIDsMain: [],
+      mapLayerIDsCaseStudyBorders: [],
 
       doAtZoomEnd: Function,
 
@@ -196,7 +202,7 @@ export default {
       bounds_hamburg: [[9.6, 53.378], [10.37, 53.753]],
       mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
       mapBoxOptions: {
-        style: 'mapbox://styles/miduku/cjqbe0tc131jb2spn17qwvcsv',
+        style: 'mapbox://styles/fabianschrader/cjqxr8akj0qsm2rs1lvj6xwqw',
         center: [10.018, 53.569],
         // zoom: 9.75,
         attributionControl: false,
@@ -225,7 +231,6 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.createAnchors()
-      // this.mapBoxOptions.maxBounds = this.maxBounds_germany
       this.mapBoxOptions.bounds = this.bounds_germany
     })
   },
@@ -236,144 +241,236 @@ export default {
       if (this.isMapInit && this.isMapLoaded) {
         switch (element.id) {
           default:
-          case 'GesundheitsversorgungDeutschland':
-            console.log(element.id)
-            this.hasPointerEvents = false
+          case 'Einleitung':
             this.thisMap.fitBounds(this.bounds_germany)
-            this.thisMap.removeLayer('bezirk-fill')
-            this.doAtZoomEnd = () => {}
 
+            this.setLayerOpacity('all', false)
+            this.setLayerOpacity('borders', false, 'line-opacity')
             this.hasBarBottomMap = false
             this.hasMapToggle = false
+            this.isCaseStudy = false
             break
 
           case 'UeberversorgtOderNicht':
-            console.log(element.id)
-            // this.thisMap.flyTo({ zoom: 12.5 })
-            this.hasPointerEvents = false
             this.thisMap.fitBounds(this.bounds_hamburg)
-            this.doAtZoomEnd = () => {
-              this.thisMap.addLayer({
-                id: 'bezirk-fill',
-                type: 'fill',
-                source: 'bezirke_social-status-index-2016',
-                layout: {},
-                paint: {
-                  'fill-color': '#627BC1',
-                  'fill-opacity': [
-                    'case',
-                    ['boolean', ['feature-state', 'hover'], false],
-                    1,
-                    0.5
-                  ]
-                }
-              })
-            }
 
-            this.hasBarBottomMap = true
+            this.setLayerOpacity('borders', true, 'line-opacity')
+            this.hasBarBottomMap = false
             this.hasMapToggle = false
+            this.isCaseStudy = false
             break
 
           case 'ZugangGesundheitseinrichtungen':
-            console.log(element.id)
-            this.hasPointerEvents = false
             this.thisMap.fitBounds(this.bounds_hamburg)
+
+            this.mapToggledRightHandler(true)
+            this.hasBarBottomMap = true
             this.hasMapToggle = false
+            this.isCaseStudy = false
             break
 
           case 'ZugangGesundheitseinrichtungenUndEinkommen':
-            console.log(element.id)
-            this.hasPointerEvents = false
             this.thisMap.fitBounds(this.bounds_hamburg)
-            this.thisMap.flyTo({ zoom: 11 })
+            this.setLayerOpacity('einkommensgruppeOben', false)
+            this.setLayerOpacity('einkommensgruppeMittel', false)
+            this.setLayerOpacity('einkommensgruppeUnten', false)
+            this.setLayerOpacity('einkommensgruppeAlle', false)
+
+            this.mapToggledRightHandler(false)
+            this.hasBarBottomMap = true
             this.hasMapToggle = true
+            this.isCaseStudy = false
             break
 
           case 'StadtteileEinkommensgruppeHoch':
-            console.log(element.id)
-            this.hasPointerEvents = false
             this.thisMap.fitBounds(this.bounds_hamburg)
-            this.hasMapToggle = true
+
+            this.setLayerOpacity('zugangskarte', false)
+            this.setLayerOpacity('einkommenskarte', false)
+            this.setLayerOpacity('einkommensgruppeOben')
+            this.setLayerOpacity('einkommensgruppeMittel', false)
+            this.setLayerOpacity('einkommensgruppeUnten', false)
+            this.setLayerOpacity('einkommensgruppeAlle', false)
+
+            this.hasBarBottomMap = false
+            this.hasMapToggle = false
+            this.isCaseStudy = false
             break
 
           case 'StadtteileEinkommensgruppeMittel':
-            console.log(element.id)
-            this.hasPointerEvents = false
             this.thisMap.fitBounds(this.bounds_hamburg)
-            this.hasMapToggle = true
+            this.setLayerOpacity('einkommensgruppeOben', false)
+            this.setLayerOpacity('einkommensgruppeMittel')
+            this.setLayerOpacity('einkommensgruppeUnten', false)
+            this.setLayerOpacity('einkommensgruppeAlle', false)
+
+            this.hasBarBottomMap = false
+            this.hasMapToggle = false
+            this.isCaseStudy = false
             break
 
           case 'StadtteileEinkommensgruppeNiedrig':
-            console.log(element.id)
-            this.hasPointerEvents = false
             this.thisMap.fitBounds(this.bounds_hamburg)
-            this.hasMapToggle = true
+            this.setLayerOpacity('einkommensgruppeOben', false)
+            this.setLayerOpacity('einkommensgruppeMittel', false)
+            this.setLayerOpacity('einkommensgruppeUnten')
+            this.setLayerOpacity('einkommensgruppeAlle', false)
+
+            this.hasBarBottomMap = false
+            this.hasMapToggle = false
+            this.isCaseStudy = false
             break
 
           case 'StadtteileEinkommensgruppeAlle':
-            console.log(element.id)
-            this.hasPointerEvents = false
             this.thisMap.fitBounds(this.bounds_hamburg)
-            this.hasMapToggle = true
+            this.setLayerVisibility('caseStudies', false)
+            this.setLayerOpacity('einkommensgruppeOben', false)
+            this.setLayerOpacity('einkommensgruppeMittel', false)
+            this.setLayerOpacity('einkommensgruppeUnten', false)
+            this.setLayerOpacity('einkommensgruppeAlle')
+
+            this.hasBarBottomMap = false
+            this.hasMapToggle = false
+            this.isCaseStudy = false
             break
 
           case 'CaseStudies':
-            console.log(element.id)
-            this.hasPointerEvents = false
             this.thisMap.fitBounds(this.bounds_hamburg)
+            this.setLayerVisibility('caseStudies')
+            this.setLayerOpacity('einkommensgruppeOben', false)
+            this.setLayerOpacity('einkommensgruppeMittel', false)
+            this.setLayerOpacity('einkommensgruppeUnten', false)
+            this.setLayerOpacity('einkommensgruppeAlle', false)
+            this.mapToggledRightHandler(false)
+
+            this.hasBarBottomMap = true
             this.hasMapToggle = true
+            this.isCaseStudy = true
             break
         }
       }
     },
 
-    mapZoomStart() {
-      // this.hasPointerEvents = false
+    addColorScale(get, colorScale) {
+      return {
+        'fill-color': ['interpolate', ['linear'], ['get', get], ...colorScale],
+        'fill-opacity': 0,
+        'fill-opacity-transition': {
+          duration: 500
+        }
+      }
     },
+
+    setLayerVisibility(layerID, isVisible = true) {
+      if (layerID === 'caseStudies') {
+        this.mapLayerIDsCaseStudyBorders.forEach(lid => {
+          this.thisMap.setLayoutProperty(
+            lid,
+            'visibility',
+            isVisible ? 'visible' : 'none'
+          )
+        })
+      } else {
+        this.thisMap.setLayoutProperty(
+          layerID,
+          'visibility',
+          isVisible ? 'visible' : 'none'
+        )
+      }
+    },
+
+    setLayerOpacity(layerID, isVisible = true, opacityType = 'fill-opacity') {
+      if (layerID === 'all') {
+        this.mapLayerIDsMain.forEach(lid => {
+          this.thisMap.setPaintProperty(lid, opacityType, isVisible ? 1 : 0)
+        })
+      } else {
+        this.thisMap.setPaintProperty(layerID, opacityType, isVisible ? 1 : 0)
+      }
+    },
+
+    mapToggledRightHandler(status) {
+      this.mapIsToggledRight = status
+
+      if (!status) {
+        this.setLayerOpacity('zugangskarte')
+        this.setLayerOpacity('einkommenskarte')
+      } else {
+        this.setLayerOpacity('zugangskarte')
+        this.setLayerOpacity('einkommenskarte', false)
+      }
+    },
+
+    currentCaseStudyHandler(stadtteilName) {
+      console.log('stadtteilName', stadtteilName)
+
+      switch (stadtteilName) {
+        default:
+        case 'Blankenese':
+          this.setLayerOpacity(
+            'borders-casestudies-blankenese',
+            true,
+            'line-opacity'
+          )
+          this.setLayerOpacity(
+            'borders-casestudies-einmsbuettel',
+            false,
+            'line-opacity'
+          )
+          this.setLayerOpacity(
+            'borders-casestudies-billstedt',
+            false,
+            'line-opacity'
+          )
+          break
+
+        case 'Eimsbüttel':
+          this.setLayerOpacity(
+            'borders-casestudies-blankenese',
+            false,
+            'line-opacity'
+          )
+          this.setLayerOpacity(
+            'borders-casestudies-einmsbuettel',
+            true,
+            'line-opacity'
+          )
+          this.setLayerOpacity(
+            'borders-casestudies-billstedt',
+            false,
+            'line-opacity'
+          )
+          break
+
+        case 'Billstedt':
+          this.setLayerOpacity(
+            'borders-casestudies-blankenese',
+            false,
+            'line-opacity'
+          )
+          this.setLayerOpacity(
+            'borders-casestudies-einmsbuettel',
+            false,
+            'line-opacity'
+          )
+          this.setLayerOpacity(
+            'borders-casestudies-billstedt',
+            true,
+            'line-opacity'
+          )
+          break
+
+        case '':
+          console.log('nothing happening')
+          break
+      }
+    },
+
+    mapZoomStart() {},
 
     mapZoomEnd() {
-      // this.hasPointerEvents = true
       return this.doAtZoomEnd()
     },
-
-    mapToggleHandler(status) {
-      this.mapToggleStatus = status
-    },
-
-    // mapClicked(map, e) {
-    //   this.addPopUp(map, e)
-    // },
-
-    // addPopUp(map, e) {
-    //   const mapboxgl = require('mapbox-gl/dist/mapbox-gl')
-    //   const features = map.queryRenderedFeatures(e.point, {
-    //     layers: ['points']
-    //   })
-
-    //   if (!features.length) {
-    //     return
-    //   }
-
-    //   const feature = features[0]
-
-    //   const popupContent = this.$extend({
-    //     methods: {
-    //       popupClicked() {
-    //         alert('Popup Clicked!')
-    //       }
-    //     },
-    //     template: '<button @click="popupClicked">Click Me!</button>'
-    //   })
-
-    //   // Populate the popup and set its coordinates
-    //   // based on the feature found.
-    //   new mapboxgl.Popup()
-    //     .setLngLat(feature.geometry.coordinates)
-    //     .setHTML('<div id="vue-popup-content"></div>')
-    //     .addTo(map)
-
-    //   new popupContent().$mount('#vue-popup-content')
-    // },
 
     mapInitialized(map) {
       console.log('map init')
@@ -382,16 +479,233 @@ export default {
     },
 
     mapLoaded(map) {
-      console.log('map loaded')
+      const layerIDsMain = []
+      const layerIDsCaseStudyBorders = []
 
-      this.thisMap.addSource('bezirke_social-status-index-2016', {
-        type: 'geojson',
-        data:
-          '/map-jsons/hamburg-stadtteile-bezirke_social-status-index-2016.geojson'
+      // Add Source
+      this.thisMap.addSource('hamburg_stadtteile_final', {
+        type: 'vector',
+        url: 'mapbox://fabianschrader.cjr2axwsk02kx31psxt4f1tfv-8mljy'
       })
 
+      // Add Layers
+      if (typeof this.thisMap.getLayer('zugangskarte') === 'undefined') {
+        this.thisMap.addLayer({
+          id: 'zugangskarte',
+          'source-layer': 'hamburg_stadtteile_final',
+          source: 'hamburg_stadtteile_final',
+          type: 'fill',
+          layout: {
+            visibility: 'visible'
+          },
+          paint: this.addColorScale(
+            'VH_Einwohner_Summe HCI',
+            mapColorScales.zugangskarte
+          )
+        })
+
+        layerIDsMain.push('zugangskarte')
+      }
+
+      if (typeof this.thisMap.getLayer('einkommenskarte') === 'undefined') {
+        this.thisMap.addLayer({
+          id: 'einkommenskarte',
+          'source-layer': 'hamburg_stadtteile_final',
+          source: 'hamburg_stadtteile_final',
+          type: 'fill',
+          layout: {
+            visibility: 'visible'
+          },
+          paint: this.addColorScale(
+            'Gesamtbetrag der Einkünfte',
+            mapColorScales.einkommenskarte
+          )
+        })
+
+        layerIDsMain.push('einkommenskarte')
+      }
+
+      if (
+        typeof this.thisMap.getLayer('einkommensgruppeOben') === 'undefined'
+      ) {
+        this.thisMap.addLayer({
+          id: 'einkommensgruppeOben',
+          'source-layer': 'hamburg_stadtteile_final',
+          source: 'hamburg_stadtteile_final',
+          type: 'fill',
+          layout: {
+            visibility: 'visible'
+          },
+          paint: this.addColorScale(
+            'Gesamtbetrag der Einkünfte',
+            mapColorScales.einkommensgruppeOben
+          )
+        })
+
+        layerIDsMain.push('einkommensgruppeOben')
+      }
+
+      if (
+        typeof this.thisMap.getLayer('einkommensgruppeMittel') === 'undefined'
+      ) {
+        this.thisMap.addLayer({
+          id: 'einkommensgruppeMittel',
+          'source-layer': 'hamburg_stadtteile_final',
+          source: 'hamburg_stadtteile_final',
+          type: 'fill',
+          layout: {
+            visibility: 'visible'
+          },
+          paint: this.addColorScale(
+            'Gesamtbetrag der Einkünfte',
+            mapColorScales.einkommensgruppeMittel
+          )
+        })
+
+        layerIDsMain.push('einkommensgruppeMittel')
+      }
+
+      if (
+        typeof this.thisMap.getLayer('einkommensgruppeUnten') === 'undefined'
+      ) {
+        this.thisMap.addLayer({
+          id: 'einkommensgruppeUnten',
+          'source-layer': 'hamburg_stadtteile_final',
+          source: 'hamburg_stadtteile_final',
+          type: 'fill',
+          layout: {
+            visibility: 'visible'
+          },
+          paint: this.addColorScale(
+            'Gesamtbetrag der Einkünfte',
+            mapColorScales.einkommensgruppeUnten
+          )
+        })
+
+        layerIDsMain.push('einkommensgruppeUnten')
+      }
+
+      if (
+        typeof this.thisMap.getLayer('einkommensgruppeAlle') === 'undefined'
+      ) {
+        this.thisMap.addLayer({
+          id: 'einkommensgruppeAlle',
+          'source-layer': 'hamburg_stadtteile_final',
+          source: 'hamburg_stadtteile_final',
+          type: 'fill',
+          layout: {
+            visibility: 'visible'
+          },
+          paint: this.addColorScale(
+            'Gesamtbetrag der Einkünfte',
+            mapColorScales.einkommensgruppeAlle
+          )
+        })
+
+        layerIDsMain.push('einkommensgruppeAlle')
+      }
+
+      if (typeof this.thisMap.getLayer('borders') === 'undefined') {
+        this.thisMap.addLayer({
+          id: 'borders',
+          'source-layer': 'hamburg_stadtteile_final',
+          source: 'hamburg_stadtteile_final',
+          type: 'line',
+          layout: {
+            visibility: 'visible'
+          },
+          paint: {
+            'line-width': 1,
+            'line-color': '#d9d9d9',
+            'line-opacity': 1
+          }
+        })
+      }
+
+      if (
+        typeof this.thisMap.getLayer('borders-casestudies-blankenese') ===
+        'undefined'
+      ) {
+        this.thisMap.addLayer({
+          id: 'borders-casestudies-blankenese',
+          'source-layer': 'hamburg_stadtteile_final',
+          source: 'hamburg_stadtteile_final',
+          type: 'line',
+          layout: {
+            visibility: 'none'
+          },
+          paint: {
+            'line-width': 5,
+            'line-color': [
+              'match',
+              ['get', 'stadtteil'],
+              ['Blankenese'],
+              'hsla(144, 76%, 66%, 0.9)',
+              'hsla(314, 94%, 28%, 0)'
+            ],
+            'line-opacity': 0
+          }
+        })
+        layerIDsCaseStudyBorders.push('borders-casestudies-blankenese')
+      }
+
+      if (
+        typeof this.thisMap.getLayer('borders-casestudies-einmsbuettel') ===
+        'undefined'
+      ) {
+        this.thisMap.addLayer({
+          id: 'borders-casestudies-einmsbuettel',
+          'source-layer': 'hamburg_stadtteile_final',
+          source: 'hamburg_stadtteile_final',
+          type: 'line',
+          layout: {
+            visibility: 'none'
+          },
+          paint: {
+            'line-width': 5,
+            'line-color': [
+              'match',
+              ['get', 'stadtteil'],
+              ['Eimsbüttel'],
+              'hsla(144, 76%, 66%, 0.9)',
+              'hsla(314, 94%, 28%, 0)'
+            ],
+            'line-opacity': 0
+          }
+        })
+        layerIDsCaseStudyBorders.push('borders-casestudies-einmsbuettel')
+      }
+
+      if (
+        typeof this.thisMap.getLayer('borders-casestudies-billstedt') ===
+        'undefined'
+      ) {
+        this.thisMap.addLayer({
+          id: 'borders-casestudies-billstedt',
+          'source-layer': 'hamburg_stadtteile_final',
+          source: 'hamburg_stadtteile_final',
+          type: 'line',
+          layout: {
+            visibility: 'none'
+          },
+          paint: {
+            'line-width': 5,
+            'line-color': [
+              'match',
+              ['get', 'stadtteil'],
+              ['Billstedt'],
+              'hsla(144, 76%, 66%, 0.9)',
+              'hsla(314, 94%, 28%, 0)'
+            ],
+            'line-opacity': 0
+          }
+        })
+        layerIDsCaseStudyBorders.push('borders-casestudies-billstedt')
+      }
+
       this.isMapLoaded = true
-      this.isLoadingDone = true
+      this.mapLayerIDsMain = layerIDsMain
+      this.mapLayerIDsCaseStudyBorders = layerIDsCaseStudyBorders
     }
   }
 }
@@ -403,6 +717,7 @@ export default {
   opacity: 0;
   pointer-events: none;
   transition: opacity 1s $easeOutQuint;
+  background: #fff;
 
   &.is-intro {
     .bar-top {
@@ -414,9 +729,9 @@ export default {
         transform: translateY(0);
       }
 
-      article {
+      /* article {
         opacity: 0;
-      }
+      } */
 
       .map {
         .bar-bottom-map {
@@ -461,6 +776,7 @@ export default {
       height: 100vh;
       z-index: 999;
       overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
       transform: translateY(-100vh);
       transition: transform 1s $easeOutQuint;
 
@@ -472,6 +788,7 @@ export default {
         width: 100%;
         height: 100%;
         background: url('/pics/bgr-intro.svg') 50% 50% no-repeat;
+        z-index: -1;
       }
     }
 

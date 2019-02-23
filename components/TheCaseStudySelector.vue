@@ -31,8 +31,6 @@
         <ccsBlankenese />
         <ccsEimsbuettel />
         <ccsBillstedt />
-        <ccsVeddel />
-        <ccsBillbrook />
       </div>
     </div>
   </div>
@@ -40,19 +38,15 @@
 
 
 <script>
-import ccsBillbrook from '~/components/content/cCaseStudiesContent/ccsBillbrook.vue'
 import ccsBillstedt from '~/components/content/cCaseStudiesContent/ccsBillstedt.vue'
 import ccsBlankenese from '~/components/content/cCaseStudiesContent/ccsBlankenese.vue'
 import ccsEimsbuettel from '~/components/content/cCaseStudiesContent/ccsEimsbuettel.vue'
-import ccsVeddel from '~/components/content/cCaseStudiesContent/ccsVeddel.vue'
 
 export default {
   components: {
-    ccsBillbrook,
     ccsBillstedt,
     ccsBlankenese,
-    ccsEimsbuettel,
-    ccsVeddel
+    ccsEimsbuettel
   },
 
   data() {
@@ -73,31 +67,26 @@ export default {
           name: 'Billstedt',
           img: '/pics/stadtteil-billstedt.svg',
           isActive: false
-        },
-        {
-          name: 'Veddel',
-          img: '/pics/stadtteil-veddel.svg',
-          isActive: false
-        },
-        {
-          name: 'Billbrook',
-          img: '/pics/stadtteil-billbrook.svg',
-          isActive: false
         }
       ]
     }
   },
 
   watch: {
-    selectedStadtteil(val, oldVal) {
+    selectedStadtteil(val = 0, oldVal) {
       this.stadtteile[oldVal].isActive = false
       this.stadtteile[val].isActive = true
+      this.$emit('current-case-study', this.stadtteile[val].name)
     }
   },
 
   mounted() {
     this.$nextTick(() => {
       this.stadtteile[this.selectedStadtteil].isActive = true
+      this.$emit(
+        'current-case-study',
+        this.stadtteile[this.selectedStadtteil].name
+      )
     })
   },
 
@@ -112,7 +101,7 @@ export default {
 
 <style lang="scss" scoped>
 .stadtteile-nav {
-  margin: 3em 0 2em;
+  margin: 5em 0 2em;
 
   ul {
     position: relative;
@@ -126,20 +115,40 @@ export default {
     width: 100%;
     border-bottom: 2px solid $gray;
 
+    &::after {
+      position: absolute;
+      content: 'Click mich';
+      width: 100%;
+      bottom: -2.5em;
+      left: 0;
+      text-align: center;
+      opacity: 0.35;
+    }
+
+    &::before {
+      position: absolute;
+      content: '';
+      width: 1px;
+      height: 0.75em;
+      border-left: 2px solid $gray;
+      left: 50%;
+      bottom: -0.75em;
+    }
+
     li {
       width: (100/3) * 1%;
       /* min-width: 3em; */
-      max-width: 6em;
+      /* max-width: 6em; */
       padding: 0.5em;
 
-      @include reallywidescreen {
+      /* @include reallywidescreen {
         width: (100/5) * 1%;
         max-width: unset;
-        /* min-width: 5em; */
-      }
+        min-width: 5em;
+      } */
 
       a {
-        font-size: 0.6em;
+        font-size: 0.65em;
         display: block;
         color: $black;
         opacity: 0.5;

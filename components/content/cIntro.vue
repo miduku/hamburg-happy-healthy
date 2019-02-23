@@ -12,9 +12,10 @@
 
   Wir – 7 Studierende der Fachhochschule Potsdam – sind diesen Fragen nachgegangen und unternehmen mithilfe offener Daten der Stadt Hamburg einen Erklärungsversuch.
 
-  <p>
+  <p style="text-align: center;">
+    <br>
     <button
-      class="button"
+      class="button is-outlined is-wide"
       @click.prevent="$emit('close-intro')"
     >
       Los geht’s!
@@ -31,6 +32,7 @@ section {
   max-width: $max-side-width;
   /* background: lightblue; */
   padding-bottom: $margin * 4;
+  pointer-events: all;
 }
 
 header {
@@ -63,11 +65,5 @@ h2 {
 a {
   color: #fff;
   text-decoration: underline;
-}
-
-.button {
-  @extend %border-radius;
-  @extend %border;
-  font-weight: bold;
 }
 </style>

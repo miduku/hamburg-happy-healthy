@@ -211,11 +211,13 @@ export default {
         color: rgba($black, 0.7);
         font-weight: 500;
         transition: line-height 0.5s $easeOutQuint;
+        /* @extend %button-transition; */
         @extend %is-uppercased;
 
         &:focus,
         &:hover {
           background: darken(#fff, 5%);
+          @extend %button-transition;
         }
 
         &.is-active {

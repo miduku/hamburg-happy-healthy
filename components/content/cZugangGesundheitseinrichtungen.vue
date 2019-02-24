@@ -1,11 +1,19 @@
 <template lang="md">
-  ## Zugang zu Gesundheits&shy;einrichtungen
+  ## Wie ist der Zugang zu Gesundheits&shy;einrichtungen in Hamburg?
 
-  Um den Zugang zu Gesundheitseinrichtungen zu definieren, haben wir weiche Standortfaktoren wie Parks und Umwelteigenschaften vernachlässigt. Als Gesundheitseinrichtung betrachten wir deshalb im folgenden Krankenhäuser, Apotheken, Allgemeinmediziner, Zahnärzte, Physiotherapeuten und niedergelassene Ärzte. Letztere enthalten alle Fachärzte wie zum Beispiel Neurolog\*innen, Urolog\*innen oder Augenärzt\*innen.
+  Um den Zugang zur Hamburger Gesundheitsversorgung bewerten zu können, haben wir die räumliche Verteilung von _Krankenhäusern_, _Allgemeinmediziner*innen_, _Zahnärzt*innen_, und _niedergelassenen Ärzt*innen_  berücksichtigt. Letztere umfassen neben weiteren auch Facharztsitze von Neurolog\*innen, Urolog\*innen oder Augenärzt\*innen. Neben den ärztlichen Einrichtungen betrachten wir zusätzlich Apotheken und Physiotherapeut\*innen, welche nicht Teil der staatlichen Bedarfsplanung sind.
 
-  Um die Stadtteile, welche sich hinsichtlich der Einwohnerzahl unterscheiden, miteinander vergleichbar zu machen, arbeiten wir nicht mit absoluten Zahlen, sondern mit einer Verhältniszahl, die wir im Folgenden <Tt title="Zugang zu Gesundheitseinrichtungen:" :content="info.gesundheitseinrichtungen">„Zugang zu Gesundheitseinrichtungen“</Tt> nennen.
+  Die Daten zu den verschiedenen Einrichtungen wurden 2017 durch das Statistikamt Nord und der Stadt Hamburg erhoben. Weiche Standortfaktoren wie Parks oder stark befahrene Straßen, welche ebenfalls Einfluss auf die Gesundheit haben, wurden nicht berücksichtigt.
 
-  Um eine Bewertung vornehmen zu können, haben wir einen <Tt title="Festlegung der Grenzwerte:" :content="info.grenzwerte">Grenzwert von 289 Einwohnern</Tt> pro Gesundheitseinrichtung definiert. Muss ein Arzt mehr als 289 Einwohner pro Stadtteil versorgen, gilt der Stadtteil als unterversorgt. Nach unserer Definition ist eine Verhältniszahl von 289 Einwohnern pro Gesundheitseinrichtung erstrebenswert.
+  ### Was bedeutet „Zugang“?
+
+  Zur Vergleichbarkeit der Stadtteile, die sich natürlich in der Einwohnerzahl unterscheiden, haben wir die Anzahl der Gesundheitseinrichtungen ins Verhältnis zu der Einwohnerzahl in einem Stadtteil  gesetzt. Damit lässt sich eine Aussage über den <Tt title="Zugang zu Gesundheitseinrichtungen:" :content="info.gesundheitseinrichtungen">„Zugang zu Gesundheitseinrichtungen“</Tt> in einem Stadtteil treffen.
+
+  Um ein präzises Bild über die Verteilung  der gesundheitliche Versorgungs in den Hamburger Stadtteilen zu erhalten, haben wir einen vergleichsweise strengen <Tt title="Festlegung der Grenzwerte:" :content="info.grenzwerte">Grenzwert von 289</Tt> Einwohner\*innen pro Gesundheitseinrichtung festgelegt, der der durchschnittlichen ärztlichen Versorgung in Deutschland [entspricht](https://www.bundesaerztekammer.de/fileadmin/user_upload/downloads/pdf-Ordner/Statistik2017/Stat17AbbTab.pdf). Da Hamburg mit durchschnittlich 139 Einwohner\*innen pro ärztlicher Einrichtung statistisch gesehen stark überversorgt ist, wird ein Stadtteil mit einem Wert über 289 als hier als niedrig versorgt definiert. Stadtteile mit weniger als 139 Einwohner\*innen pro Gesundheitseinrichtung gelten als hoch versorgt.
+
+  ### So sieht der Zugang in Hamburg aus
+
+  Bei der Betrachtung des Hamburger Planungsgebiets nach Stadtteilen offenbart sich ein diverses Bild. Insgesamt verfügen 14 Stadtteile über keine einzige Arztpraxis, wie zum Beispiel der viertkleinste Stadtteil Langenbek, Wohldorf-Ohlstedt oder Billwerder. Die meisten dieser Stadtteile sind eher dünn besiedelte Gebiete in Randlagen mit zum Teil geringer Einwohnerzahl. Rechnet man alle Gesundheitseinrichtungen wie Krankenhäuser, Apotheken und niedergelassene Ärzt*innen zusammen, gibt es noch 9 Stadtteile ohne Gesundheitseinrichtungen. Die Stadtteile im Zentrum sind überwiegend gut versorgt, es gibt jedoch Ausnahmen — beispielsweise Veddel oder Borgfelde.
 
 </template>
 
@@ -22,18 +30,15 @@ export default {
     return {
       info: {
         gesundheitseinrichtungen: [
-          `Den Zugang haben wir berechnet, indem wir die Anzahl der Einwohner in einem Stadtteil mit der Anzahl der Gesundheitseinrichtungen dividiert haben. Eine hohe Verhältniszahl bedeutet, dass eine Einrichtung für mehr Einwohner zuständig ist als bei einer geringen Verhältniszahl. Deshalb gilt: je höher die Zahl, desto schlechter der Zugang und umgekehrt.`
+          `Der Zugang wurde berechnet, indem die Anzahl der Einwohner*innen in einem Stadtteil mit der Anzahl der Gesundheitseinrichtungen dividiert wurde. Eine hohe Verhältniszahl bedeutet, dass eine Einrichtung für mehr Einwohner*innen zuständig ist als bei einer geringen Verhältniszahl. Deshalb gilt: Je höher die Zahl, desto schlechter der Zugang und umgekehrt.`
         ],
         grenzwerte: [
-          `Der Richtwert von 289 Einwohnern pro Gesundheitseinrichtung richtet sich nach der durchschnittlichen Anzahl der Einwohner pro Arzt in Deutschland (2017). Da Hamburg mit einem Durchschnittswert von 139 Einwohnern pro Arzt besser versorgt ist als der Rest der Republik, bezeichnen wir Stadtteile, die über dem Bundesdurchschnitt (289 Einwohner pro Arzt) liegen, relativ gesehen als unterversorgt.  Wir berücksichtigen neben niedergelassenen Ärzten zusätzlich jedoch Apotheken und Physiotherapeuten, die in der staatlichen Bedarfsplanung eigentlich nicht berücksichtigt werden.`,
-          `Stadtteile, die 139–289 Einwohner pro Gesundheitseinrichtung aufweisen, gelten laut unserer Definition als normal versorgt. Stadtteile mit weniger als 139 Einwohnern pro Gesundheitseinrichtung, dem Hamburger Durchschnittswert, definieren wir als überversorgt:`,
           [
-            `Keine Gesundheitseinrichtungen: Stadtteile ohne Gesundheitseinrichtung`,
-            `Unterversorgt: Stadtteile mit über 289 Einwohnern pro Gesundheitseinrichtung`,
-            `Normal versorgt: Stadtteile mit 139–289 Einwohnern pro Gesundheitseinrichtung`,
-            `Überversorgt: Stadtteile mit unter 139 Einwohnern pro Gesundheitseinrichtungen`
-          ],
-          `Unterteilt man das Planungsgebiet Hamburg nach Stadtteilen, offenbart sich ein diverses Bild. Insgesamt verfügen 14 Stadtteile über keinen einzigen niedergelassenen Arzt, wie zum Beispiel der viertkleinste Stadtteil Langenbek, Wohldorf-Ohlstedt oder Billwerder. Die meisten dieser Stadtteile sind eher dünn besiedelte Gebiete in Randlagen mit zum Teil geringer Einwohnerzahl. Rechnet man alle Gesundheitseinrichtungen wie Krankenhäuser, Apotheken und niedergelassene Ärzte zusammen, gibt es noch 9 Stadtteile ohne Gesundheitseinrichtungen. Die Stadtteile im Zentrum sind überwiegend gut versorgt, es gibt jedoch Ausnahmen, beispielsweise Veddel oder Borgfelde.`
+            `<strong>Keine Gesundheitseinrichtungen</strong>: <br>Stadtteile ohne Gesundheitseinrichtung`,
+            `<strong>Niedrige Versorgung</strong>: <br>Stadtteile mit über 289 Einwohner*innen pro Gesundheitseinrichtung`,
+            `<strong>Normale Versorgung</strong>: <br>Stadtteile mit 139–289 Einwohner*innen pro Gesundheitseinrichtung`,
+            `<strong>Hohe Versorgung</strong>: <br>Stadtteile mit unter 139 Einwohner*innen pro Gesundheitseinrichtungen`
+          ]
         ]
       }
     }

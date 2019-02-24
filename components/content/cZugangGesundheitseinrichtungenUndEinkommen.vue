@@ -1,9 +1,14 @@
 <template lang="md">
-  ## Zugang zu Gesundheits&shy;einrichtungen … und Einkommen?
+  ## Welche Rolle spielt das Einkommen?
 
-Wir greifen im Folgenden die in Hamburg bereits fortgeschrittene Diskussion um die Verteilung der Gesundheitseinrichtungen nach Einkommen auf. Die Karte zeigt nun eine Visualisierung der Hamburger Stadtteile nach Einkommen. Die Einwohner*innen von Steinwerder und Kleiner Grasbrook hatten 2013 mit 13.777 € pro Jahr durchschnittlich das niedrigste Einkommen. In Nienstedten lag das durchschnittliche Jahreseinkommen 2013 bei 120.716 €.
+  ### Ist der Zugang zu Gesundheitseinrichtungen in Stadtteilen mit einem höheren Einkommen tatsächlich besser? 
 
-Die Stadtteile haben wir nach Einkommen in drei Gruppen eingeteilt: Stadtteile der oberen, mittleren und unteren Einkommensschicht. Die Stadtteile der oberen Einkommensgruppe ist gleichzeitig auch die mit der geringsten Anzahl an Einwohnern. 18% der Bevölkerung Hamburgs leben dort. 36% der Einwohner Hamburgs verteilen sich in den Stadtteilen der mittleren Einkommensgruppe. Die Mehrzahl der Hamburger wohnt in Gebieten der unteren Einkommensgruppe mit einem Anteil von 46%.
+  Die Karte zeigt die <Tt title="„Einkommen“" :content="info.einkommenverteilung">Einkommensverteilung</Tt> der 104 Stadtteile Hamburgs. Die Einwohner*innen in Steinwerder und Kleiner Grasbrook hatten 2013 mit durchschnittlich 13.777 € pro Jahr das niedrigste Einkommen. In Nienstedten war das durchschnittliche Jahreseinkommen 2013 mit 120.716 € am höchsten.
+
+
+  ### Unterteilung nach Einkommensgruppen 
+  
+  Die Stadtteile wurden in <Tt :content="info.einkommensgruppen">drei Einkommensgruppen</Tt> eingeteilt: Stadtteile der oberen, mittleren und unteren Einkommensgruppe. Die obere Einkommensgruppe ist gleichzeitig auch die mit der geringsten Anzahl an Einwohner*innen: 18% der Bevölkerung Hamburgs leben dort. 36% der Einwohner\*innen Hamburgs verteilen sich in den Stadtteilen der mittleren Einkommensgruppe. Die Mehrzahl der Hamburger\*innen wohnt in Gebieten der unteren Einkommensgruppe mit einem Anteil von 46% an der Gesamtbevölkerung.
 </template>
 
 
@@ -18,16 +23,15 @@ export default {
   data() {
     return {
       info: {
-        einkommen: [
-          `Die Einkommensdaten entstammen der Lohn- und Einkommensstatistik, welche 2013 das letzte mal erhoben wurde. Sie visualisieren das jährliche Durchschnittseinkommen der Stadtteile.`,
-          `Sie stammen nicht aus dem selben Jahr wie die erfassten Daten über die Gesundheitseinrichtiungen (2017). Um dennoch eine Aussage über einen möglichen Zusammenhang zwischen dem Zugang der Gesundheitseinrichtungen und dem Einkommen eines Stadtteils treffen zu können, wurde auf diese Daten zurückgegriffen.`
+        einkommenverteilung: [
+          `Die Einkommensdaten zum jährlichen Durchschnittseinkommen entstammen der Lohn- und Einkommensstatistik, welche 2013 auf Stadtteilebene erhoben wurde. Sie wurden nicht im selben Jahr erhoben, wie die Daten über die Gesundheitseinrichtungen (2017).`
         ],
-        gruppen: [
+        einkommensgruppen: [
           `Auf Grundlage des Medianeinkommens aus dem Jahr 2016, welches bei ca. 1.600€ pro Monat lag, haben wir die Hamburger Stadtteile in drei Einkommensgruppen eingeteilt:`,
           [
-            `Gruppe 1 repräsentiert die obere Einkommensschicht, mit einem durchschnittlichen Jahreseinkommen der Einwohner von mehr als dem 2,5-fachen des Medianeinkommens (>48.000 €) jährlich.`,
-            `Die Einwohner der Stadtteile in Gruppe 2 verfügen durchschnittlich über das 1,6- bis 2,5-fache des Medianeinkommens und sind somit die mittlere Einkommensschicht (>32.000 - 48.000 € jährlich).`,
-            `Gruppe 3 stellt die untere Einkommensschicht (<32.000 € jährlich) dar.`
+            `Gruppe 1 repräsentiert die obere Einkommensgruppe, mit einem durchschnittlichen Jahreseinkommen der Einwohner*innen von mehr als dem 2,5-fachen des Medianeinkommens (mehr als 48.000 €) jährlich.`,
+            `Die Einwohner*innen der Stadtteile in Gruppe 2 verfügen durchschnittlich über das 1,6- bis 2,5-fache des Medianeinkommens und bilden damit die mittlere Einkommensgruppe (32.000 bis 48.000 € jährlich).`,
+            `Gruppe 3 stellt die untere Einkommensgruppe (weniger als 32.000 € jährlich) dar. `
           ]
         ]
       }

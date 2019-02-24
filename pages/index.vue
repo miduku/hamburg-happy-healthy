@@ -49,6 +49,7 @@
         <Scrollama
           :offset="0.5"
           @step-enter="scrollamaStepEnterHandler"
+          @step-exit="scrollamaStepExitHandler"
         >
           <div
             id="Einleitung"
@@ -58,10 +59,10 @@
           </div>
 
           <div
-            id="UeberversorgtOderNicht"
+            id="Ueberversorgt"
             class="step anchor"
           >
-            <cUeberversorgtOderNicht />
+            <cUeberversorgt />
           </div>
 
           <div
@@ -121,6 +122,20 @@
               @current-case-study="currentCaseStudyHandler"
             />
           </div>
+
+          <div
+            id="impressum"
+            class="step"
+          >
+            <h2 style="margin-bottom: 0;">
+              Impressum
+            </h2>
+
+            <div class="columns">
+              <cImpressum class="column" />
+              <cDaten class="column" />
+            </div>
+          </div>
         </Scrollama>
       </article>
     </div>
@@ -143,7 +158,7 @@ import MapToggle from '~/components/BaseMapToggle.vue'
 
 import cIntro from '~/components/content/cIntro.vue'
 import cEinleitung from '~/components/content/cEinleitung.vue'
-import cUeberversorgtOderNicht from '~/components/content/cUeberversorgtOderNicht.vue'
+import cUeberversorgt from '~/components/content/cUeberversorgt.vue'
 import cZugangGesundheitseinrichtungen from '~/components/content/cZugangGesundheitseinrichtungen.vue'
 import cZugangGesundheitseinrichtungenUndEinkommen from '~/components/content/cZugangGesundheitseinrichtungenUndEinkommen.vue'
 import cStadtteileEinkommensgruppeHoch from '~/components/content/cStadtteileEinkommensgruppeHoch.vue'
@@ -151,6 +166,8 @@ import cStadtteileEinkommensgruppeMittel from '~/components/content/cStadtteileE
 import cStadtteileEinkommensgruppeNiedrig from '~/components/content/cStadtteileEinkommensgruppeNiedrig.vue'
 import cStadtteileEinkommensgruppeAlle from '~/components/content/cStadtteileEinkommensgruppeAlle.vue'
 import cCaseStudies from '~/components/content/cCaseStudies.vue'
+import cImpressum from '~/components/content/cImpressum.vue'
+import cDaten from '~/components/content/cDaten.vue'
 
 export default {
   components: {
@@ -165,14 +182,16 @@ export default {
     // content
     cIntro,
     cEinleitung,
-    cUeberversorgtOderNicht,
+    cUeberversorgt,
     cZugangGesundheitseinrichtungen,
     cZugangGesundheitseinrichtungenUndEinkommen,
     cStadtteileEinkommensgruppeHoch,
     cStadtteileEinkommensgruppeMittel,
     cStadtteileEinkommensgruppeNiedrig,
     cStadtteileEinkommensgruppeAlle,
-    cCaseStudies
+    cCaseStudies,
+    cImpressum,
+    cDaten
   },
 
   mixins: [anchorElements],
@@ -236,9 +255,17 @@ export default {
   },
 
   methods: {
+    scrollamaStepExitHandler({ element, index, direction }) {
+      if (this.isMapInit && this.isMapLoaded) {
+        element.classList.remove('is-scroll-active')
+      }
+    },
+
     scrollamaStepEnterHandler({ element, index, direction }) {
       // only do this stuff if map is done init and loading
       if (this.isMapInit && this.isMapLoaded) {
+        element.classList.add('is-scroll-active')
+
         switch (element.id) {
           default:
           case 'Einleitung':
@@ -251,7 +278,7 @@ export default {
             this.isCaseStudy = false
             break
 
-          case 'UeberversorgtOderNicht':
+          case 'Ueberversorgt':
             this.thisMap.fitBounds(this.bounds_hamburg)
 
             this.setLayerOpacity('borders', true, 'line-opacity')
@@ -271,12 +298,14 @@ export default {
 
           case 'ZugangGesundheitseinrichtungenUndEinkommen':
             this.thisMap.fitBounds(this.bounds_hamburg)
+
             this.setLayerOpacity('einkommensgruppeOben', false)
             this.setLayerOpacity('einkommensgruppeMittel', false)
             this.setLayerOpacity('einkommensgruppeUnten', false)
             this.setLayerOpacity('einkommensgruppeAlle', false)
 
             this.mapToggledRightHandler(false)
+
             this.hasBarBottomMap = true
             this.hasMapToggle = true
             this.isCaseStudy = false
@@ -287,6 +316,7 @@ export default {
 
             this.setLayerOpacity('zugangskarte', false)
             this.setLayerOpacity('einkommenskarte', false)
+
             this.setLayerOpacity('einkommensgruppeOben')
             this.setLayerOpacity('einkommensgruppeMittel', false)
             this.setLayerOpacity('einkommensgruppeUnten', false)
@@ -299,6 +329,10 @@ export default {
 
           case 'StadtteileEinkommensgruppeMittel':
             this.thisMap.fitBounds(this.bounds_hamburg)
+
+            this.setLayerOpacity('zugangskarte', false)
+            this.setLayerOpacity('einkommenskarte', false)
+
             this.setLayerOpacity('einkommensgruppeOben', false)
             this.setLayerOpacity('einkommensgruppeMittel')
             this.setLayerOpacity('einkommensgruppeUnten', false)
@@ -311,6 +345,10 @@ export default {
 
           case 'StadtteileEinkommensgruppeNiedrig':
             this.thisMap.fitBounds(this.bounds_hamburg)
+
+            this.setLayerOpacity('zugangskarte', false)
+            this.setLayerOpacity('einkommenskarte', false)
+
             this.setLayerOpacity('einkommensgruppeOben', false)
             this.setLayerOpacity('einkommensgruppeMittel', false)
             this.setLayerOpacity('einkommensgruppeUnten')
@@ -323,11 +361,16 @@ export default {
 
           case 'StadtteileEinkommensgruppeAlle':
             this.thisMap.fitBounds(this.bounds_hamburg)
-            this.setLayerVisibility('caseStudies', false)
+
+            this.setLayerOpacity('zugangskarte', false)
+            this.setLayerOpacity('einkommenskarte', false)
+
             this.setLayerOpacity('einkommensgruppeOben', false)
             this.setLayerOpacity('einkommensgruppeMittel', false)
             this.setLayerOpacity('einkommensgruppeUnten', false)
             this.setLayerOpacity('einkommensgruppeAlle')
+
+            this.setLayerVisibility('caseStudies', false)
 
             this.hasBarBottomMap = false
             this.hasMapToggle = false
@@ -336,12 +379,25 @@ export default {
 
           case 'CaseStudies':
             this.thisMap.fitBounds(this.bounds_hamburg)
-            this.setLayerVisibility('caseStudies')
+
             this.setLayerOpacity('einkommensgruppeOben', false)
             this.setLayerOpacity('einkommensgruppeMittel', false)
             this.setLayerOpacity('einkommensgruppeUnten', false)
             this.setLayerOpacity('einkommensgruppeAlle', false)
+
+            this.setLayerVisibility('caseStudies')
+
             this.mapToggledRightHandler(false)
+
+            this.hasBarBottomMap = true
+            this.hasMapToggle = true
+            this.isCaseStudy = true
+            break
+
+          case 'impressum':
+            this.thisMap.fitBounds(this.bounds_hamburg)
+
+            this.setLayerOpacity('all', false)
 
             this.hasBarBottomMap = true
             this.hasMapToggle = true
@@ -422,6 +478,11 @@ export default {
             false,
             'line-opacity'
           )
+          this.setLayerOpacity(
+            'borders-casestudies-billbrook',
+            false,
+            'line-opacity'
+          )
           break
 
         case 'Eimsbüttel':
@@ -440,6 +501,11 @@ export default {
             false,
             'line-opacity'
           )
+          this.setLayerOpacity(
+            'borders-casestudies-billbrook',
+            false,
+            'line-opacity'
+          )
           break
 
         case 'Billstedt':
@@ -455,6 +521,34 @@ export default {
           )
           this.setLayerOpacity(
             'borders-casestudies-billstedt',
+            true,
+            'line-opacity'
+          )
+          this.setLayerOpacity(
+            'borders-casestudies-billbrook',
+            false,
+            'line-opacity'
+          )
+          break
+
+        case 'Billbrook':
+          this.setLayerOpacity(
+            'borders-casestudies-blankenese',
+            false,
+            'line-opacity'
+          )
+          this.setLayerOpacity(
+            'borders-casestudies-einmsbuettel',
+            false,
+            'line-opacity'
+          )
+          this.setLayerOpacity(
+            'borders-casestudies-billstedt',
+            false,
+            'line-opacity'
+          )
+          this.setLayerOpacity(
+            'borders-casestudies-billbrook',
             true,
             'line-opacity'
           )
@@ -703,6 +797,33 @@ export default {
         layerIDsCaseStudyBorders.push('borders-casestudies-billstedt')
       }
 
+      if (
+        typeof this.thisMap.getLayer('borders-casestudies-billbrook') ===
+        'undefined'
+      ) {
+        this.thisMap.addLayer({
+          id: 'borders-casestudies-billbrook',
+          'source-layer': 'hamburg_stadtteile_final',
+          source: 'hamburg_stadtteile_final',
+          type: 'line',
+          layout: {
+            visibility: 'none'
+          },
+          paint: {
+            'line-width': 5,
+            'line-color': [
+              'match',
+              ['get', 'stadtteil'],
+              ['Billbrook'],
+              'hsla(144, 76%, 66%, 0.9)',
+              'hsla(314, 94%, 28%, 0)'
+            ],
+            'line-opacity': 0
+          }
+        })
+        layerIDsCaseStudyBorders.push('borders-casestudies-billbrook')
+      }
+
       this.isMapLoaded = true
       this.mapLayerIDsMain = layerIDsMain
       this.mapLayerIDsCaseStudyBorders = layerIDsCaseStudyBorders
@@ -805,7 +926,7 @@ export default {
       /* border-right: 2px solid $gray; */
       /* @extend %box-shadow; */
 
-      @include from(2040px) {
+      @include from($max-side-width-break) {
         width: $max-side-width;
       }
 
@@ -813,6 +934,37 @@ export default {
         display: block;
         padding-bottom: $margin * 6;
         padding-top: $margin * 6;
+        max-width: $max-side-width;
+        opacity: 0.1;
+        transition: opacity 0.75s $easeOutQuint;
+
+        &.is-scroll-active {
+          opacity: 1;
+          /* transform: translateX(2em); */
+        }
+
+        &#impressum {
+          position: relative;
+          min-height: 100vh;
+          width: 100vw;
+          max-width: unset;
+          margin-left: -3.2rem;
+          padding-left: 3.2rem;
+          padding-right: 3.2rem;
+          background: #fff;
+
+          &::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            left: 0;
+            top: -150px;
+            height: 150px;
+            background: $white-gradient-to-top;
+            z-index: 1;
+            pointer-events: none;
+          }
+        }
       }
     }
 
@@ -825,7 +977,7 @@ export default {
       margin-left: $width-article * 1vw;
       background: $gray;
 
-      @include from(2040px) {
+      @include from($max-side-width-break) {
         margin-left: $max-side-width;
         width: calc(100vw - #{$max-side-width});
       }
@@ -844,7 +996,7 @@ export default {
         max-width: 200px;
         pointer-events: none;
         z-index: 1;
-        background: $white-gradient;
+        background: $white-gradient-to-right;
       }
 
       .bar-bottom-map {

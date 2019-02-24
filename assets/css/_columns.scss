@@ -1,0 +1,19 @@
+.columns {
+  display: flex;
+  margin-right: -$margin;
+  margin-left: -$margin;
+  margin-top: -$margin;
+
+  &:not(:last-child) {
+    margin-bottom: $margin;
+  }
+
+  .column {
+    display: block;
+    flex-basis: 0;
+    flex-grow: 1;
+    flex-shrink: 1;
+    padding: $margin;
+    max-width: $max-side-width;
+  }
+}

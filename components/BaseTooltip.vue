@@ -5,7 +5,7 @@
     </em>
 
     <template slot="popover">
-      <h6>{{ title }}</h6>
+      <h6 v-if="title.length > 0">{{ title }}</h6>
 
       <div
         v-for="(cntnt, i) in content"
@@ -34,7 +34,7 @@ export default {
   props: {
     title: {
       type: String,
-      required: true
+      default: ''
     },
     content: {
       type: Array,

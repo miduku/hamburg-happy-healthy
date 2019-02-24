@@ -1,13 +1,13 @@
 <template lang="md">
   ## Gesundheitsversorgung nach Einkommen
 
-  ### Obere Einkommensgruppe
+  ### Die Gesundheitsversorgung in der oberen Einkommensgruppe
 
   ![Stadtteile mit hohem Einkommen](/pics/bar-hohes-einkommen.svg)
   ![Legende](/pics/bar-legende.svg)
 
-  Zunächst betrachten wir die Stadtteile mit einem Durchschnittseinkommen von über 48.000 € und werfen einen Blick auf die dortige gesundheitliche Versorgung. Die Karte zeigt die 23 Stadtteile, welche in diese Einkommensgruppe fallen.
+  Zunächst betrachten wir die Stadtteile mit einem Durchschnittseinkommen von über 48.000 € pro Jahr und werfen einen Blick auf die dortige gesundheitliche Versorgung. Die Karte zeigt die 23 Stadtteile, welche in diese Einkommensgruppe fallen.
 
-  Drei Viertel der Stadtteile der oberen Einkommensschicht sind normal versorgt. Dabei ist beinahe ein Drittel sogar überversorgt. 25% der Stadtteile kommen auf mehr als 289 Einwohner pro Gesundheitseinrichtung und sind nach unserer Definition unterversorgt. Auffällig ist, dass die unterversorgten Gebiete dieser Gruppe sich im  äußeren nordwestlichen Bezirk Wandsbek gruppieren: Lehmsahl-Mellingstedt, Bergstedt, Wohldorf-Ohlstedt und Sasel weisen mehr als 289 Einwohner pro Gesundheitseinrichtung auf.
+  Drei Viertel der Stadtteile der oberen Einkommensgruppe sind **normal versorgt**. Dabei ist ein Drittel sogar **hoch versorgt**. 26% der Stadtteile kommen auf mehr als 289 Einwohner\*innen pro Gesundheitseinrichtung und sind nach unserer Definition **niedrig versorgt**.  Auffällig ist, dass sich diese Gebiete im äußeren nordwestlichen Bezirk Wandsbek gruppieren: Lehmsahl-Mellingstedt, Bergstedt, Wohldorf-Ohlstedt und Sasel weisen mehr als 289 Einwohner*innen pro Gesundheitseinrichtung auf.
 
 </template>

@@ -31,6 +31,7 @@
         <ccsBlankenese />
         <ccsEimsbuettel />
         <ccsBillstedt />
+        <ccsBillbrook />
       </div>
     </div>
   </div>
@@ -41,12 +42,14 @@
 import ccsBillstedt from '~/components/content/cCaseStudiesContent/ccsBillstedt.vue'
 import ccsBlankenese from '~/components/content/cCaseStudiesContent/ccsBlankenese.vue'
 import ccsEimsbuettel from '~/components/content/cCaseStudiesContent/ccsEimsbuettel.vue'
+import ccsBillbrook from '~/components/content/cCaseStudiesContent/ccsBillbrook.vue'
 
 export default {
   components: {
     ccsBillstedt,
     ccsBlankenese,
-    ccsEimsbuettel
+    ccsEimsbuettel,
+    ccsBillbrook
   },
 
   data() {
@@ -66,6 +69,11 @@ export default {
         {
           name: 'Billstedt',
           img: '/pics/stadtteil-billstedt.svg',
+          isActive: false
+        },
+        {
+          name: 'Billbrook',
+          img: '/pics/stadtteil-billbrook.svg',
           isActive: false
         }
       ]
@@ -136,7 +144,7 @@ export default {
     }
 
     li {
-      width: (100/3) * 1%;
+      width: (100/4) * 1%;
       /* min-width: 3em; */
       /* max-width: 6em; */
       padding: 0.5em;

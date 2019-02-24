@@ -1,5 +1,10 @@
 <template>
-  <nav class="nav-meta">
+  <scrollactive
+    class="nav-meta"
+    :duration="750"
+    :offset="0"
+    bezier-easing-value="0.23, 1, 0.32, 1"
+  >
     <ul class="button-group nav">
       <li>
         <a
@@ -11,10 +16,13 @@
       </li>
 
       <li>
-        <a href="#">
+        <a
+          href="#impressum"
+          class="scrollactive-item"
+        >
           Impressum
         </a>
       </li>
     </ul>
-  </nav>
+  </scrollactive>
 </template>

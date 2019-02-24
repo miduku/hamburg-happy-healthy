@@ -2,8 +2,8 @@
   ### Billbrook
 
   <CaseStudiesStadtteilStats
-    versorgung="???"
-    einkommen="???"
+    versorgung="Niedrige Versorgung"
+    einkommen="Niedrig"
   />
 
   Im Stadtteil Billbrook hatten die Menschen 2017 mit 22.625 € das neuntniedrigste Durchschnittseinkommen Hamburgs. Mit einer Einwohnerzahl von 2.198 gehört Billbrook zu den kleineren Stadtteilen Hamburgs. Der Weg zu einer Gesundheitsversorgung ist für die Menschen hier weit, denn es gibt weder Apotheken oder Physiotherapeuten, noch Fachärzte oder Allgemeinmediziner geschweige denn ein Krankenhaus in Billbrook. In den angrenzenden Stadtteilen Billstedt, Horn und Billwerder, die ebenfalls zu der niedrigen Einkommensgruppe gehören, ist die Versorgungslage ebenfalls niedrig. Auch im angrenzenden Stadtteil Moorfleet, welcher zur mittleren Einkommensgruppe gehört gab es 2017 nur eine Physiotherapiepraxis.

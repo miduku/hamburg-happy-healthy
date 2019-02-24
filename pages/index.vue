@@ -53,7 +53,7 @@
         >
           <div
             id="Einleitung"
-            class="step anchor"
+            class="step anchor is-scroll-active"
           >
             <cEinleitung />
           </div>

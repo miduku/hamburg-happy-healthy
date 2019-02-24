@@ -69,7 +69,7 @@
 
   #### Die Bedarfsplanung in Deutschland im europäischen Vergleich
 
-  —http://www.bpb.de/politik/innenpolitik/gesundheitspolitik/72906/gesundheitswesen-im-europaeischen-vergleich
+  — http://www.bpb.de/politik/innenpolitik/gesundheitspolitik/72906/gesundheitswesen-im-europaeischen-vergleich
 
 
   ### Sonstiges

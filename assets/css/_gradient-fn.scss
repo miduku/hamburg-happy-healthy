@@ -1,0 +1,22 @@
+@function gradient-fn($limit-number, $direction, $list) {
+  $new-list: null;
+  $first-number: 0;
+  $last-number: length($list) - 1;
+
+  @each $color, $number in $list {
+    $n1: null;
+    $n3: null;
+
+    @if $number == $limit-number {
+      $n3: 0;
+    } @else {
+      $n1: $number / $limit-number;
+      $n2: 1 - $n1;
+      $n3: 100 * $n2;
+    }
+
+    $new-list: append($new-list, ($color unquote($n3 + '%')), 'comma');
+  }
+
+  @return $direction, $new-list;
+}

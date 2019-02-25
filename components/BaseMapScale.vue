@@ -19,17 +19,17 @@
 
     <div class="scale-person-gesundheitseinrichtungen">
       <div class="scale-title">
-        Person pro Gesundheitseinrichtungen
+        Personen pro Gesundheitseinrichtungen
       </div>
       <div class="scale-content">
         <div class="left">
           4.020
         </div>
         <div class="left-65">
-          1.380
+          1.385
         </div>
         <div class="right">
-          0
+          1
         </div>
       </div>
     </div>
@@ -103,7 +103,7 @@ export default {
 
         &.left-65 {
           text-align: left;
-          color: $whisper;
+          /* color: $whisper; */
           left: 65.67164%;
         }
 
@@ -130,6 +130,24 @@ export default {
     opacity: 0;
     /* background: linear-gradient(to right, #fff 65.67164%, #034e7b 100%); */
     background: linear-gradient(
+      gradient-fn(
+        4020,
+        to right,
+        (
+          (#fff, 4020),
+          (#f1eef6, 1385),
+          (#d0d1e6, 1383),
+          (#a6bddb, 1153),
+          (#74a9cf, 923),
+          (#3690c0, 693),
+          (#0570b0, 463),
+          (#034e7b, 233),
+          (#034e7b, 1),
+          (#000, 0)
+        )
+      )
+    );
+    /* background: linear-gradient(
       to right,
       #fff 0%,
       #fff 12.5%,
@@ -140,10 +158,30 @@ export default {
       #3690c0 75%,
       #0570b0 87.5%,
       #034e7b 100%
-    );
+    ); */
   }
 
   .scale-einkommen {
+    opacity: 1;
+    background: linear-gradient(
+      gradient-fn(
+        111000,
+        to left,
+        (
+          (#7a0177, 111000),
+          (#aa017e, 97200),
+          (#de3697, 83314),
+          (#f768a1, 69428),
+          (#fa9fb5, 55542),
+          (#fcc5c0, 41657),
+          (#fde0dd, 27771),
+          (#fff7f3, 13777),
+          (#fff7f3, 0)
+        )
+      )
+    );
+  }
+  /* .scale-einkommen {
     opacity: 1;
     background: linear-gradient(
       to right,
@@ -157,6 +195,6 @@ export default {
       #aa017e 87.5%,
       #7a0177 100%
     );
-  }
+  } */
 }
 </style>

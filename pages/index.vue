@@ -937,9 +937,11 @@ export default {
         max-width: $max-side-width;
         opacity: 0.1;
         transition: opacity 0.75s $easeOutQuint;
+        pointer-events: none;
 
         &.is-scroll-active {
           opacity: 1;
+          pointer-events: all;
           /* transform: translateX(2em); */
         }
 

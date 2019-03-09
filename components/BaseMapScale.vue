@@ -5,7 +5,7 @@
   >
     <div class="scale-einkommen">
       <div class="scale-title">
-        Einkommen
+        Einkommen (EUR) pro Jahr
       </div>
       <div class="scale-content">
         <div class="left">
@@ -25,11 +25,14 @@
         <div class="left">
           4.020
         </div>
-        <div class="left-65">
+        <div class="left-25">
           1.385
         </div>
-        <div class="right">
+        <div class="right-10">
           1
+        </div>
+        <div class="right">
+          0
         </div>
       </div>
     </div>
@@ -98,19 +101,12 @@ export default {
 
         &.left {
           text-align: left;
-          left: $padding-side;
-        }
-
-        &.left-65 {
-          text-align: left;
-          /* color: $whisper; */
-          left: 65.67164%;
+          left: $padding-side / 1.75;
         }
 
         &.right {
           text-align: right;
-          color: $whisper;
-          right: $padding-side;
+          right: $padding-side / 1.75;
         }
       }
     }
@@ -129,7 +125,7 @@ export default {
   .scale-person-gesundheitseinrichtungen {
     opacity: 0;
     /* background: linear-gradient(to right, #fff 65.67164%, #034e7b 100%); */
-    background: linear-gradient(
+    /* background: linear-gradient(
       gradient-fn(
         4020,
         to right,
@@ -142,8 +138,26 @@ export default {
           (#3690c0, 693),
           (#0570b0, 463),
           (#034e7b, 233),
-          (#034e7b, 1),
-          (#000, 0)
+          (#034e7b, 1)
+        )
+      )
+    ); */
+    /* https://gka.github.io/palettes/#colors=#D6F3C1,#66A38E,#00127A|steps=8|bez=1|coL=1 */
+    background: linear-gradient(
+      gradient-fn(
+        4020,
+        to right,
+        (
+          (#00127a, 4020),
+          (#323380, 3015),
+          (#4b5388, 2512.5),
+          (#62748f, 2010),
+          (#799398, 1507.5),
+          (#92b4a3, 1005),
+          (#b0d4b0, 602.5),
+          (#d6f3c1, 250),
+          (#fff, 250),
+          (#fff, 0)
         )
       )
     );
@@ -159,6 +173,21 @@ export default {
       #0570b0 87.5%,
       #034e7b 100%
     ); */
+
+    .left {
+      color: $whisper;
+    }
+
+    .left-25 {
+      text-align: left;
+      color: $whisper;
+      left: 25%;
+    }
+
+    .right-10 {
+      text-align: right;
+      right: 8%;
+    }
   }
 
   .scale-einkommen {
@@ -180,6 +209,10 @@ export default {
         )
       )
     );
+
+    .right {
+      color: $whisper;
+    }
   }
   /* .scale-einkommen {
     opacity: 1;

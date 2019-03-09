@@ -1,7 +1,7 @@
 {
   "name": "hamburg-happy-healthy",
   "version": "1.0.0",
-  "description": "Project about income and health infrastructure in Hamburg, Germany",
+  "description": "Projekt über Hamburgs Gesundheitseinrichtung und den Zusammenhang zu allen Stadtteilen mit verschiedenen Einkommensgruppen",
   "author": "miduku",
   "private": true,
   "scripts": {

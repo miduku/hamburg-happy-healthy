@@ -5,7 +5,7 @@
 
   Das Projekt wurde von [Marian Dörk](https://www.fh-potsdam.de/person/person-action/marian-doerk/show/Person/) (FH Potsdam) betreut. Ebenfalls möchten wir uns für die Zusammenarbeit, Unterstützung, Beratung und Hilfestellung mit und durch das City Science Lab der HCU Hamburg bedanken.
 
-  Bei Feedback, Kritik oder weiteren Fragen zu dem Projekt, kontaktieren Sie uns bitte unter folgender E-Mail-Adresse: ___________________________
+  Bei Feedback, Kritik oder weiteren Fragen zu dem Projekt, kontaktieren Sie uns bitte unter folgender E-Mail-Adresse: hamburghappyhealthy@gmail.com
 
   ### Haftungsausschluss
 

@@ -18,7 +18,7 @@
       class="button is-outlined is-wide"
       @click.prevent="$emit('close-intro')"
     >
-      Los geht’s!
+      Erfahre mehr!
     </button>
   </p>
 </template>
